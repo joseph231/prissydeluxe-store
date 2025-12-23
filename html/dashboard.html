@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard — PRISSYDELUXE</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+  <div id="navbar"></div>
+
+  <header class="page-hero" style="background-image:url('../assets/images/backgrounds/bg-3.jpg')">
+    <div class="hero-inner">
+      <img src="../assets/images/logo.png" alt="logo" class="page-hero-logo">
+      <h1>Dashboard</h1>
+      <p>Overview (admin / user area)</p>
+    </div>
+  </header>
+
+  <main class="container" style="padding:40px 0 80px">
+    <section style="max-width:1100px;margin:0 auto">
+      <h2 class="section-title">Overview</h2>
+      <p style="color:#666">This is a simple dashboard stub. Connect with your admin endpoints or supabase later.</p>
+    </section>
+  </main>
+
+  <div id="footer"></div>
+
+  <script type="module" src="../js/auth/session.js"></script>
+  <script src="../js/ui/components.js"></script>
+  <script type="module">
+    import { requireAuthOrRedirect } from '../js/auth/session.js';
+    (async () => { await requireAuthOrRedirect(); })();
+  </script>
+</body>
+
+</html>

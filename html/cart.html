@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+<link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cart — PRISSYDELUXE</title>
+
+  <!-- Main styles (Dior style) -->
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    /* Small cart-specific adjustments */
+    .cart-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .cart-row img {
+      width: 110px;
+      height: 110px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .cart-meta {
+      flex: 1;
+    }
+
+    .cart-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .cart-price {
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .qty-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .qty-controls button {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .remove-btn {
+      background: transparent;
+      border: 0;
+      color: #b00;
+      cursor: pointer;
+      padding: 6px 0
+    }
+
+    .summary-strong {
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+
+    .empty-cart {
+      color: #666;
+      padding: 24px 0;
+      text-align: center;
+    }
+
+    .checkout-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    @media (max-width:900px) {
+      section.grid-two {
+        grid-template-columns: 1fr;
+      }
+
+      .cart-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="navbar"></div>
+
+  <!-- Hero -->
+  <header class="page-hero" style="background-image:url('../assets/images/backgrounds/bg-3.jpg')">
+    <div class="hero-inner">
+      <img src="../assets/images/logo.png" alt="PRISSYDELUXE" class="page-hero-logo">
+      <h1>Your Cart</h1>
+      <p>Review items before checkout</p>
+    </div>
+  </header>
+
+  <main class="container" style="padding:40px 0 80px">
+    <section class="grid-two"
+      style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns: 1fr 360px; gap:28px;">
+
+      <!-- Left: Cart items -->
+      <div>
+        <h2 class="section-title">Items</h2>
+        <div id="cartList" aria-live="polite"></div>
+      </div>
+
+      <!-- Right: Summary -->
+      <aside style="background:#fff;padding:18px;border-radius:10px;box-shadow:0 8px 18px rgba(0,0,0,0.06);">
+        <h3 style="margin-bottom:12px">Summary</h3>
+
+        <div id="cartTotals" style="margin-bottom:14px">
+          <div>Subtotal: ₦0</div>
+          <div>Shipping: ₦0</div>
+          <div class="summary-strong">Total: ₦0</div>
+        </div>
+
+        <div class="checkout-actions">
+          <button id="proceedCheckout" class="hero-btn" style="background:#000;color:#fff;border:0">Proceed to
+            Checkout</button>
+          <button id="clearCart" class="hero-btn"
+            style="background:transparent;color:#000;border:1px solid rgba(0,0,0,0.12)">Clear</button>
+        </div>
+
+        <hr style="margin:16px 0">
+
+        <h4 style="margin-bottom:8px">Payment options</h4>
+        <p style="font-size:14px;color:#666">
+          Bank transfer: <br>
+          Account: <strong>PRISSYDELUXE</strong><br>
+          Account no: <strong>0000000000</strong><br>
+          Bank: <strong>Sample Bank</strong>
+        </p>
+
+        <p style="font-size:14px;color:#666">
+          Or send details via WhatsApp after checkout: <a href="https://wa.me/0000000000" target="_blank"
+            rel="noopener">WhatsApp</a>
+        </p>
+      </aside>
+
+    </section>
+  </main>
+
+  <div id="footer"></div>
+
+  <!-- Components (insert navbar/footer) -->
+  <script src="../js/ui/components.js"></script>
+
+  <!-- Try to load session helper; fall back to a local function if it doesn't exist -->
+  <script type="module">
+    // Attempt to import requireAuthOrRedirect from your session helper.
+    // If not present, provide a fallback that uses localStorage 'pd_logged'.
+    async function getRequireAuthOrFallback() {
+      try {
+        // dynamic import (works when module exists)
+        const mod = await import('../js/auth/session.js');
+        if (mod && typeof mod.requireAuthOrRedirect === 'function') {
+          return mod.requireAuthOrRedirect;
+        }
+      } catch (e) {
+        // ignore - fallback below
+      }
+
+      // fallback implementation:
+      return async function requireAuthOrRedirectFallback() {
+        // If supabase exists, try to use it, else fallback to localStorage
+        try {
+          if (window.supabase && window.supabase.auth) {
+            const { data } = await window.supabase.auth.getSession();
+            if (!data?.session) {
+              // preserve current path for after-login redirect (optional)
+              localStorage.setItem('pd_after_login', location.pathname + location.search);
+              location.href = './login.html';
+              throw new Error('redirecting to login');
+            }
+            return;
+          }
+        } catch (e) {
+          console.warn('supabase session check failed', e);
+        }
+
+        // fallback local check
+        if (!localStorage.getItem('pd_logged')) {
+          localStorage.setItem('pd_after_login', location.pathname + location.search);
+          location.href = './login.html';
+          throw new Error('redirecting to login (fallback)');
+        }
+      };
+    }
+
+    // Provide a lightweight local pdCart if /js/cart/cart.js is missing or broken.
+    // If you already include your own cart.js, it will be used instead (we check before assigning).
+    (function providePdCartFallback() {
+      if (window.pdCart && typeof window.pdCart.getCart === 'function') return;
+      window.pdCart = (function () {
+        const KEY = 'pd_cart';
+        function read() { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch { return []; } }
+        function write(v) { localStorage.setItem(KEY, JSON.stringify(v)); }
+        return {
+          getCart: () => read(),
+          saveCart: (items) => write(items),
+          addToCart: (item) => {
+            const cart = read();
+            const existing = cart.find(i => i.id === item.id);
+            if (existing) existing.qty = (existing.qty || 1) + (item.qty || 1);
+            else cart.push(Object.assign({}, item, { qty: item.qty || 1 }));
+            write(cart);
+          },
+          removeAt: (index) => {
+            const cart = read();
+            cart.splice(index, 1);
+            write(cart);
+          },
+          updateQty: (index, qty) => {
+            const cart = read();
+            if (!cart[index]) return;
+            if (qty <= 0) cart.splice(index, 1);
+            else cart[index].qty = qty;
+            write(cart);
+          },
+          clearCart: () => write([])
+        };
+      })();
+    })();
+
+    // Main page logic: require auth then render cart
+    (async () => {
+      const requireAuth = await getRequireAuthOrFallback();
+
+      try {
+        // Protect page: will redirect to login if not authenticated
+        await requireAuth();
+      } catch (e) {
+        // requireAuth will redirect; stop executing further
+        return;
+      }
+
+      // Now render cart UI
+      const list = document.getElementById('cartList');
+      const totalsEl = document.getElementById('cartTotals');
+      const clearBtn = document.getElementById('clearCart');
+      const proceedBtn = document.getElementById('proceedCheckout');
+
+      function formatCurrency(n) {
+        if (typeof n === 'number') return n.toLocaleString();
+        // n may be string like "12000" or "₦12,000" -> extract digits
+        const digits = String(n).replace(/[^0-9]/g, '');
+        if (!digits) return '0';
+        return parseInt(digits, 10).toLocaleString();
+      }
+
+      function computeTotals(cart) {
+        // naive numeric handling: remove non-digits from price strings
+        const subtotal = cart.reduce((s, it) => {
+          const p = String(it.price || '').replace(/[^0-9]/g, '');
+          return s + (p ? parseInt(p, 10) * (it.qty || 1) : 0);
+        }, 0);
+        return { subtotal, shipping: 0, total: subtotal };
+      }
+
+      function renderCart() {
+        const cart = window.pdCart.getCart() || [];
+        list.innerHTML = '';
+
+        if (!cart.length) {
+          list.innerHTML = '<div class="empty-cart">Your cart is empty.</div>';
+          totalsEl.innerHTML = 'Subtotal: ₦0<br>Shipping: ₦0<br><strong>Total: ₦0</strong>';
+          proceedBtn.disabled = true;
+          return;
+        }
+
+        cart.forEach((it, idx) => {
+          const row = document.createElement('div');
+          row.className = 'cart-row';
+          row.innerHTML = `
+            <img src="${it.image || '../assets/images/products/sample1.jpg'}" alt="${escapeHtml(it.title || 'Product')}">
+            <div class="cart-meta">
+              <div class="cart-title">${escapeHtml(it.title || '')}</div>
+              <div class="cart-price">₦${formatCurrency(it.price || '')}</div>
+
+              <div style="display:flex;align-items:center;gap:16px;margin-top:8px;">
+                <div class="qty-controls" data-idx="${idx}">
+                  <button class="qty-decr" data-idx="${idx}">−</button>
+                  <div style="min-width:36px;text-align:center">${it.qty || 1}</div>
+                  <button class="qty-incr" data-idx="${idx}">+</button>
+                </div>
+                <button class="remove-btn" data-idx="${idx}">Remove</button>
+              </div>
+            </div>
+          `;
+          list.appendChild(row);
+        });
+
+        // Attach event listeners (delegation also possible)
+        list.querySelectorAll('.qty-decr').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = Number(btn.dataset.idx);
+            const cart = window.pdCart.getCart();
+            const cur = cart[idx]?.qty || 1;
+            window.pdCart.updateQty(idx, Math.max(0, cur - 1));
+            renderCart();
+          });
+        });
+        list.querySelectorAll('.qty-incr').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = Number(btn.dataset.idx);
+            const cart = window.pdCart.getCart();
+            const cur = cart[idx]?.qty || 1;
+            window.pdCart.updateQty(idx, cur + 1);
+            renderCart();
+          });
+        });
+        list.querySelectorAll('.remove-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = Number(btn.dataset.idx);
+            window.pdCart.removeAt(idx);
+            renderCart();
+          });
+        });
+
+        // Totals
+        const totals = computeTotals(cart);
+        totalsEl.innerHTML = `Subtotal: ₦${totals.subtotal.toLocaleString()}<br>Shipping: ₦${totals.shipping.toLocaleString()}<br><strong>Total: ₦${totals.total.toLocaleString()}</strong>`;
+        proceedBtn.disabled = false;
+      }
+
+      // Clear cart
+      clearBtn.addEventListener('click', () => {
+        if (!confirm('Clear all items from your cart?')) return;
+        window.pdCart.clearCart();
+        renderCart();
+      });
+
+      // Proceed to checkout
+      proceedBtn.addEventListener('click', async () => {
+        // Re-check auth just before redirect (defensive)
+        try {
+          if (window.supabase && window.supabase.auth) {
+            const { data } = await window.supabase.auth.getSession();
+            if (!data?.session) {
+              // redirect to login if not logged in
+              localStorage.setItem('pd_after_login', '/html/checkout.html');
+              location.href = './login.html';
+              return;
+            }
+          } else if (!localStorage.getItem('pd_logged')) {
+            localStorage.setItem('pd_after_login', '/html/checkout.html');
+            location.href = './login.html';
+            return;
+          }
+
+          // proceed to checkout page (protected as well)
+          location.href = './checkout.html';
+        } catch (e) {
+          console.error(e);
+          location.href = './login.html';
+        }
+      });
+
+      // small helper to escape html
+      function escapeHtml(s) {
+        return String(s || '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+      }
+
+      // initial render
+      renderCart();
+    })();
+  </script>
+</body>
+
+</html>

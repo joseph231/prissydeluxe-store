@@ -1,0 +1,52 @@
+<!-- /components/footer.html -->
+<footer class="site-footer" role="contentinfo">
+  <div class="container footer-grid">
+    <div class="footer-column footer-brand">
+      <img src="/assets/images/logo.png" alt="PRISSYDELUXE" class="footer-logo">
+      <div class="footer-brand-name">PRISSYDELUXE</div>
+      <div class="footer-brand-tag">FEEL THE ILLUSION OF HEAVEN</div>
+    </div>
+
+    <div class="footer-column footer-links">
+      <h3 class="footer-title">Quick links</h3>
+      <ul>
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/html/login.html">Shop</a></li>
+        <li><a href="/html/about.html">About</a></li>
+        <li><a href="/html/contact.html">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-column footer-contact">
+      <h3 class="footer-title">Contact & Orders</h3>
+      <p class="muted">Bank transfer accepted. Use WhatsApp order after checkout.</p>
+      <p class="muted">Email: <a href="mailto:prissydeluxe@example.com">prissydeluxe@example.com</a></p>
+    </div>
+
+    <div class="footer-column footer-socials">
+      <h3 class="footer-title">Follow us</h3>
+      <div class="social-links">
+        <a href="#" target="_blank" rel="noopener">Instagram</a><br>
+        <a href="#" target="_blank" rel="noopener">TikTok</a><br>
+        <a href="#" target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container" style="padding-top:18px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;">
+    <nav class="legal-links" style="font-size:14px;">
+      <a href="/html/legal-terms.html">Legal Terms</a>&nbsp;·&nbsp;
+      <a href="/html/sales-terms.html">Sales Terms</a>&nbsp;·&nbsp;
+      <a href="/html/privacy.html">Privacy Policy</a>
+    </nav>
+
+    <div class="copyright" style="font-size:14px;margin-top:10px">© <span id="year"></span> PRISSYDELUXE.</div>
+  </div>
+
+  <script>
+    (function(){
+      const yearEl = document.getElementById('year');
+      if(yearEl) yearEl.textContent = new Date().getFullYear();
+    })();
+  </script>
+</footer>

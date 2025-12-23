@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin — PRISSYDELUXE</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="icon" href="../assets/images/favicon.ico">
+</head>
+
+<body>
+  <div id="navbar"></div>
+
+  <header class="hero-page" style="background-image:url('../assets/images/backgrounds/bg-3.jpg');padding:56px 0;">
+    <div class="container">
+      <h1>Admin</h1>
+      <p class="muted">Manage products and orders</p>
+    </div>
+  </header>
+
+  <main class="container" style="padding:1.6rem 1rem;">
+    <form id="productForm" class="card">
+      <h2>Add / Edit Product</h2>
+
+      <label for="pTitle">Title</label>
+      <input id="pTitle" type="text" placeholder="Product title">
+
+      <label for="pCategory">Category</label>
+      <select id="pCategory">
+        <option value="perfume">Perfume</option>
+        <option value="skincare">Skincare</option>
+        <option value="household">Household</option>
+      </select>
+
+      <label for="pPrice">Price</label>
+      <input id="pPrice" type="number" placeholder="Price">
+
+      <label for="pImage">Image</label>
+      <input id="pImage" type="file" accept="image/*">
+
+      <div style="margin-top:12px;">
+        <button id="saveProduct" class="btn-admin">Save Product</button>
+      </div>
+    </form>
+  </main>
+
+  <div id="footer"></div>
+
+  <script src="../js/ui/components.js"></script>
+  <script src="../js/admin/admin-functions.js"></script>
+  <script src="../js/admin/admin.js"></script>
+  <script src="../js/admin/inventory.js"></script>
+</body>
+
+</html>

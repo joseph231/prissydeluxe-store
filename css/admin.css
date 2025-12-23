@@ -1,0 +1,21 @@
+/* /css/admin.css - basic admin dashboard styling */
+.admin-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.2rem;
+}
+.admin-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 900px) {
+  .admin-grid { grid-template-columns: 2fr 1fr; }
+}
+.admin-card {
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.03);
+}
+.btn-admin { padding: .65rem 1rem; background: var(--gold); color: #070707; border-radius: 8px; border: 0; font-weight: 700; }

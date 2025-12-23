@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PrissyDeluxe – Luxury Fragrances</title>
+
+  <!-- Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap"
+    rel="stylesheet">
+
+  <!-- Main Styles -->
+  <link rel="stylesheet" href="./css/style.css">
+
+  <!-- Component Loader (injects navbar & footer) -->
+  <script defer src="./js/ui/components.js"></script>
+</head>
+
+<body>
+
+  <!-- Navbar injected here -->
+  <div id="navbar"></div>
+
+  <!-- DIOR style 50/50 hero -->
+  <section class="hero-split">
+
+    <!-- LEFT PANEL (bg-1) -->
+    <div class="hero-panel left" style="background-image: url('./assets/images/backgrounds/bg-1.jpg');">
+      <!-- CTA placed on right side of left panel by CSS -->
+      <a class="hero-btn" href="./html/login.html">SHOP NOW</a>
+    </div>
+
+    <!-- RIGHT PANEL (bg-2) -->
+    <div class="hero-panel right" style="background-image: url('./assets/images/backgrounds/bg-2.jpg');">
+      <!-- CTA placed on left side of right panel by CSS -->
+      <a class="hero-btn" href="./html/login.html">SHOP NOW</a>
+    </div>
+
+    <!-- Centered logo -->
+    <div class="hero-center-logo">
+      <img src="./assets/images/logo.png" alt="PRISSYDELUXE">
+    </div>
+  </section>
+
+  <!-- Featured -->
+  <section class="featured">
+    <h2 class="section-title">Featured Collection</h2>
+    <div class="featured-grid">
+      <div class="featured-item">
+        <img src="./assets/images/products/sample1.jpg" alt="Luxury Eau De Parfum">
+        <p>Luxury Eau De Parfum</p>
+      </div>
+      <div class="featured-item">
+        <img src="./assets/images/products/sample2.jpg" alt="Skincare Radiance Pack">
+        <p>Skincare Radiance Pack</p>
+      </div>
+      <div class="featured-item">
+        <img src="./assets/images/products/sample3.jpg" alt="Limited Edition Fragrance">
+        <p>Limited Edition Fragrance</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer injected here -->
+  <div id="footer"></div>
+
+</body>
+
+</html>

@@ -1,0 +1,41 @@
+/* /css/product.css - small product page tweaks */
+
+.product-page {
+  display:flex;
+  gap:30px;
+  align-items:flex-start;
+  padding:40px 0;
+}
+
+.product-gallery {
+  flex: 1 1 60%;
+}
+
+.product-details {
+  flex: 1 1 40%;
+}
+
+.thumb-main {
+  width:100%;
+  padding-top:80%;
+  background-size:cover;
+  background-position:center;
+  border-radius:8px;
+}
+
+.thumb-list {
+  margin-top:12px;
+  display:flex;
+  gap:8px;
+  overflow:auto;
+}
+.thumb-list .thumb-item {
+  flex:0 0 auto;
+  width:80px;
+  padding-top:80%;
+  background-size:cover;
+  background-position:center;
+  border-radius:6px;
+  cursor:pointer;
+  border:2px solid transparent;
+}

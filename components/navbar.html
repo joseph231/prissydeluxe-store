@@ -1,0 +1,66 @@
+<!-- /components/navbar.html -->
+<!--
+  Navbar component used by pages.
+  Option 2 layout: logo left, menu center, icons right (for inner pages).
+  When injected into the home page, js will add .nav-home to use Option 1 styles.
+-->
+<nav role="navigation" aria-label="Primary navigation">
+  <div class="nav-inner container">
+
+    <!-- Left: logo (Option 2 display for inner pages) -->
+    <div class="nav-left">
+      <a href="/index.html" class="brand">
+        <img src="/assets/images/logo.png" alt="PRISSYDELUXE" class="nav-logo">
+      </a>
+    </div>
+
+    <!-- Center: brand title + nav links -->
+    <div class="nav-center">
+      <a href="/index.html" class="brand-title">PRISSYDELUXE</a>
+      <div class="brand-tagline">FEEL THE ILLUSION OF HEAVEN</div>
+
+      <ul class="nav-links" role="menubar">
+        <li role="none"><a role="menuitem" href="/index.html">Home</a></li>
+        <li role="none"><a role="menuitem" href="/html/shop.html">Shop</a></li>
+        <li role="none"><a role="menuitem" href="/html/about.html">About</a></li>
+        <li role="none"><a role="menuitem" href="/html/contact.html">Contact</a></li>
+      </ul>
+    </div>
+
+    <!-- Right: search/account/cart and mobile toggle -->
+    <div class="nav-right">
+      <button id="navSearchBtn" class="nav-search" aria-label="Search">🔍</button>
+      <a id="navAccount" class="nav-account" href="/html/profile.html">Account</a>
+      <a id="navCart" class="nav-cart" href="/html/cart.html" aria-label="Cart">Cart <span id="navCartCount">0</span></a>
+      <button id="mobileMenuToggle" class="mobile-toggle" aria-label="Open menu">☰</button>
+    </div>
+  </div>
+
+  <!-- Accessible off-canvas mobile menu. DEFAULT: inert. JS toggles 'open' and removes/sets inert -->
+  <div id="mobileMenu" class="mobile-menu" inert>
+    <div class="mobile-menu-inner" role="dialog" aria-label="Mobile menu">
+      <button id="mobileMenuClose" class="mobile-close" aria-label="Close menu">✕</button>
+
+      <div class="mobile-brand">
+        <img src="/assets/images/logo.png" alt="PRISSYDELUXE" class="mobile-logo">
+        <div class="mobile-tag">FEEL THE ILLUSION OF HEAVEN</div>
+      </div>
+<div id="navUser" class="nav-user"></div>
+
+      <ul class="mobile-links">
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/html/shop.html">Shop</a></li>
+        <li><a href="/html/about.html">About</a></li>
+        <li><a href="/html/contact.html">Contact</a></li>
+        <li><a href="/html/cart.html">Cart</a></li>
+        <li><a href="/html/profile.html">Account</a></li>
+      </ul>
+
+      <div class="mobile-socials">
+        <a href="#" aria-label="Instagram">Instagram</a>
+        <a href="#" aria-label="TikTok">TikTok</a>
+        <a href="#" aria-label="WhatsApp">WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</nav>

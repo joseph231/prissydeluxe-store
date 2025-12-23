@@ -1,0 +1,6 @@
+/* /css/darkmode.css - small theme override that switches vars when data-theme="dark" */
+html[data-theme="dark"] {
+  --bg: #070707;
+  --text: #F7F4F2;
+  --muted: #BDB9B6;
+}

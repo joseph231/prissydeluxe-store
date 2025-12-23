@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Shop — PRISSYDELUXE</title>
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/product.css">
+
+  <!-- Supabase optional (deferred) -->
+  <script type="module" src="../supabase.js" defer></script>
+  <script src="../js/ui/components.js" defer></script>
+
+  <!-- Small inline styles used only for toast + floating cart button so you see feedback -->
+  <style>
+    .floating-cart-btn {
+      position: fixed;
+      right: 20px;
+      bottom: 22px;
+      z-index: 1300;
+      background: #000;
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 28px;
+      text-decoration: none;
+      font-family: "Cormorant Garamond", serif;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+    }
+
+    .toast-msg {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 26px;
+      background: #111;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 8px;
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity .25s ease, transform .25s ease;
+      pointer-events: none;
+    }
+
+    .toast-msg.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-6px);
+    }
+
+    .product-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 12px;
+    }
+
+    .btn-outline,
+    .btn-add,
+    .btn-add.smooth-btn,
+    .btn-outline.smooth-btn {
+      padding: 10px 16px;
+      border-radius: 30px;
+      text-decoration: none;
+      border: 1px solid #111;
+      background: transparent;
+      cursor: pointer;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 14px;
+    }
+
+    .btn-add {
+      background: #000;
+      color: #fff;
+      border: 1px solid #000;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: #000;
+    }
+
+    /* loading / empty states */
+    .loading-text,
+    .empty-text {
+      text-align: center;
+      color: #777;
+      padding: 28px 0;
+      grid-column: 1/-1;
+    }
+
+    /* small visual for product-price */
+    .product-price {
+      color: #222;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
+    /* make 'View' anchor appear as button */
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="navbar"></div>
+
+  <!-- HERO -->
+  <header class="page-hero" style="background-image:url('../assets/images/backgrounds/bg-3.jpg')">
+    <div class="hero-inner">
+      <img src="../assets/images/logo.png" class="page-hero-logo" alt="">
+      <h1>Shop the Collection</h1>
+      <p>Perfumes • Skincare • Home fragrance</p>
+    </div>
+  </header>
+
+  <!-- Floating View Cart button (target set by script) -->
+  <a id="floatingCart" class="floating-cart-btn" href="./login.html">View Cart</a>
+
+  <main class="container" style="padding:50px 0 100px">
+
+    <div class="search-row" style="justify-content:center">
+      <input id="shopSearch" type="search" placeholder="Search products e.g. 'rose'">
+      <button id="searchBtn" class="icon-btn">Search</button>
+    </div>
+
+    <h2 class="section-title">Collection</h2>
+
+    <div id="productList" class="product-grid" aria-live="polite"></div>
+
+    <nav class="pagination" style="display:flex;justify-content:center;gap:10px;margin-top:26px;">
+      <button id="prevPage" disabled>Previous</button>
+      <span id="pageInfo" style="align-self:center;color:#666;margin:0 12px">Page 1</span>
+      <button id="nextPage">Next</button>
+    </nav>
+
+  </main>
+
+  <div id="footer"></div>
+
+  <script>
+    (async () => {
+      // -----------------------
+      // CONFIG
+      // -----------------------
+      const perPage = 12;            // products per page (requested)
+      let page = 1;
+      let totalPages = 1;
+      let allItems = [];             // will be client-side paginated if necessary
+
+      // DOM refs
+      const listEl = document.getElementById('productList');
+      const prevBtn = document.getElementById('prevPage');
+      const nextBtn = document.getElementById('nextPage');
+      const pageInfo = document.getElementById('pageInfo');
+      const searchInput = document.getElementById('shopSearch');
+      const searchBtn = document.getElementById('searchBtn');
+      const floatingCart = document.getElementById('floatingCart');
+
+      // -----------------------
+      // AUTH helper (tries Supabase, falls back to localStorage)
+      // -----------------------
+      async function isLogged() {
+        try {
+          if (window.supabase && typeof window.supabase.auth?.getSession === 'function') {
+            const { data } = await window.supabase.auth.getSession();
+            return !!data?.session;
+          }
+        } catch (e) {
+          // supabase exists but something failed — ignore and fallback
+          console.warn('Supabase check failed, falling back to local check', e);
+        }
+        // fallback: localStorage flag used by your demo login flow
+        return !!localStorage.getItem('pd_logged');
+      }
+
+      // set floating cart link target based on login state
+      (async () => {
+        try {
+          const ok = await isLogged();
+          floatingCart.href = ok ? './cart.html' : './login.html';
+        } catch (e) {
+          floatingCart.href = './login.html';
+        }
+      })();
+
+      // -----------------------
+      // Load products: prefer fetchProductsFromSupabase if present
+      // Fallback to demo products for local testing.
+      // -----------------------
+      async function loadAllProducts(q = '') {
+        // try global helper first
+        try {
+          if (typeof window.fetchProductsFromSupabase === 'function') {
+            const items = await window.fetchProductsFromSupabase({ page: 1, perPage: 1000, q });
+            if (Array.isArray(items)) return items;
+          }
+
+          if (window.supabase && typeof window.supabase.from === 'function') {
+            const { data, error } = await window.supabase.from('products').select('*').limit(1000);
+            if (!error && Array.isArray(data)) return data;
+          }
+        } catch (err) {
+          console.warn('Supabase fetching failed', err);
+        }
+
+        // FALLBACK: robust demo dataset (150 items) for pagination testing
+        const demo = [];
+        for (let i = 1; i <= 150; i++) {
+          demo.push({
+            id: `demo-${i}`,
+            title: `Demo Product ${i}`,
+            price: (1500 + i * 25).toString(),
+            image: '../assets/images/products/sample1.jpg',
+            description: 'Demo description for testing.'
+          });
+        }
+
+        // local filter if query provided
+        if (q && q.trim()) {
+          const ql = q.toLowerCase();
+          return demo.filter(p => (p.title + ' ' + (p.description || '')).toLowerCase().includes(ql));
+        }
+        return demo;
+      }
+
+      // -----------------------
+      // Render page of items (client-side pagination)
+      // -----------------------
+      function renderPage() {
+        listEl.innerHTML = '<div class="loading-text">Loading…</div>';
+
+        const q = (searchInput.value || '').trim();
+        const filtered = q ? allItems.filter(p => ((p.title || '') + ' ' + (p.description || '')).toLowerCase().includes(q.toLowerCase())) : allItems;
+
+        totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
+        if (page > totalPages) page = totalPages;
+
+        const start = (page - 1) * perPage;
+        const pageItems = filtered.slice(start, start + perPage);
+
+        listEl.innerHTML = '';
+
+        if (!pageItems || pageItems.length === 0) {
+          listEl.innerHTML = '<p class="empty-text">No products found.</p>';
+          pageInfo.textContent = `Page ${page} of ${totalPages}`;
+          prevBtn.disabled = page <= 1;
+          nextBtn.disabled = page >= totalPages;
+          return;
+        }
+
+        pageItems.forEach(p => {
+          const img = (p.image || '').startsWith('/') || (p.image || '').startsWith('../') ? p.image : ('../' + (p.image || 'assets/images/products/sample1.jpg'));
+
+          const card = document.createElement('div');
+          card.className = 'product-card fade-up';
+          card.innerHTML = `
+        <img src="${img}" alt="${escapeHtml(p.title || 'Product')}">
+        <h4>${escapeHtml(p.title || '')}</h4>
+        <p class="product-price">${p.price ? '₦' + escapeHtml(p.price) : ''}</p>
+
+        <div class="product-actions">
+          <a class="btn-outline smooth-btn" href="./product.html?id=${encodeURIComponent(p.id || '')}">View</a>
+          <button class="btn-add smooth-btn" data-id="${escapeHtml(p.id || '')}" data-title="${escapeHtml(p.title || '')}" data-price="${escapeHtml(p.price || '')}" data-image="${escapeHtml(img)}">Add to Cart</button>
+        </div>
+      `;
+          listEl.appendChild(card);
+        });
+
+        pageInfo.textContent = `Page ${page} of ${totalPages}`;
+        prevBtn.disabled = page <= 1;
+        nextBtn.disabled = page >= totalPages;
+      }
+
+      // -----------------------
+      // Utilities
+      // -----------------------
+      function escapeHtml(str) {
+        return String(str).replace(/[&<>"']/g, s => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[s]));
+      }
+
+      function showToast(msg) {
+        const t = document.createElement('div');
+        t.className = 'toast-msg';
+        t.textContent = msg;
+        document.body.appendChild(t);
+        requestAnimationFrame(() => t.classList.add('show'));
+        setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 1600);
+      }
+
+      // -----------------------
+      // Event handlers
+      // -----------------------
+      prevBtn.addEventListener('click', () => {
+        if (page > 1) { page--; renderPage(); window.scrollTo({ top: document.querySelector('.page-hero').offsetTop, behavior: 'smooth' }); }
+      });
+
+      nextBtn.addEventListener('click', () => {
+        if (page < totalPages) { page++; renderPage(); window.scrollTo({ top: document.querySelector('.page-hero').offsetTop, behavior: 'smooth' }); }
+      });
+
+      // search button + Enter key
+      searchBtn.addEventListener('click', () => { page = 1; renderPage(); });
+      searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); page = 1; renderPage(); } });
+
+      // delegated Add to Cart
+      listEl.addEventListener('click', (e) => {
+        const btn = e.target.closest('.btn-add');
+        if (!btn) return;
+        // build cart and save to localStorage
+        const id = btn.dataset.id;
+        const title = btn.dataset.title || '';
+        const price = btn.dataset.price || '';
+        const image = btn.dataset.image || '';
+
+        const cart = JSON.parse(localStorage.getItem('pd_cart') || '[]');
+        const existing = cart.find(i => i.id === id);
+        if (existing) {
+          existing.qty = (existing.qty || 1) + 1;
+        } else {
+          cart.push({ id, title, price, image, qty: 1 });
+        }
+        localStorage.setItem('pd_cart', JSON.stringify(cart));
+        showToast('Added to cart');
+      });
+
+      // -----------------------
+      // INITIAL LOAD
+      // -----------------------
+      async function init() {
+        // load all products (server-side if available, fallback local)
+        allItems = await loadAllProducts();
+
+        // ensure page remains within range
+        totalPages = Math.max(1, Math.ceil(allItems.length / perPage));
+        if (page > totalPages) page = totalPages;
+
+        renderPage();
+      }
+
+      // run
+      await init();
+
+    })();
+  </script>
+</body>
+
+</html>

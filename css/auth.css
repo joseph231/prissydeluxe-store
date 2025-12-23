@@ -1,0 +1,120 @@
+/* ===============================
+   AUTH PAGES — CLEAN DIOR STYLE
+   /css/auth.css
+   Final polished version
+   =============================== */
+
+.auth {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  background: #fff;
+}
+
+/* Card */
+.auth-card {
+  width: 100%;
+  max-width: 460px;
+  padding: 2rem;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+  opacity: 0;
+  transform: translateY(28px);
+  animation: authFadeUp .6s cubic-bezier(.22,.9,.3,1) forwards;
+}
+
+@keyframes authFadeUp {
+  to { opacity:1; transform:translateY(0); }
+}
+
+.auth-card h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  font-family: "Cormorant Garamond", serif;
+  letter-spacing: .6px;
+  color: #111;
+  text-align:center;
+}
+
+/* inputs */
+.auth-card .auth-field {
+  margin-bottom: 12px;
+}
+.auth-card input,
+.auth-card textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #dcdcdc;
+  background: #fff;
+  font-size: 0.95rem;
+  transition: box-shadow .18s ease, border-color .18s ease;
+}
+.auth-card input:focus,
+.auth-card textarea:focus {
+  outline: none;
+  border-color: #000;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+/* primary button */
+.auth-card .auth-btn {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #000;
+  color: #fff;
+  font-weight: 700;
+  font-family: "Cormorant Garamond", serif;
+  cursor: pointer;
+  border: 0;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.auth-card .auth-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+
+/* small textual links */
+.auth-bottom {
+  margin-top: 14px;
+  text-align:center;
+  font-size: 0.95rem;
+}
+.auth-bottom a { color: #111; font-weight:600; text-decoration:none; }
+.auth-bottom a:hover { text-decoration:underline; }
+
+/* helper: small error text */
+.auth-error { color:#b00020; font-size:.95rem; margin-top:8px; text-align:center; }
+
+/* compact form spacing on mobile */
+@media (max-width:640px){
+  .auth-card { padding:18px; border-radius:12px; }
+}
+/* Fade + slide Dior-style animation */
+.auth-card {
+  animation: fadeSlideUp .9s ease both;
+}
+
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Smooth input focus */
+.auth-field input {
+  transition: border .3s, background .3s;
+}
+
+.auth-field input:focus {
+  border-color: #111;
+  background: #f6f6f6;
+}

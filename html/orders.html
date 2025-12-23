@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Orders — PRISSYDELUXE</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+  <div id="navbar"></div>
+
+  <header class="page-hero" style="background-image:url('../assets/images/backgrounds/bg-3.jpg')">
+    <div class="hero-inner">
+      <img src="../assets/images/logo.png" alt="logo" class="page-hero-logo">
+      <h1>Your Orders</h1>
+      <p>Order history and details</p>
+    </div>
+  </header>
+
+  <main class="container" style="padding:40px 0 80px">
+    <section style="max-width:1000px;margin:0 auto">
+      <h2 class="section-title">Orders</h2>
+      <div id="ordersList"></div>
+    </section>
+  </main>
+
+  <div id="footer"></div>
+
+  <script type="module" src="../js/auth/session.js"></script>
+  <script src="../js/ui/components.js"></script>
+
+  <script type="module">
+    import { requireAuthOrRedirect, getSessionUser } from '../js/auth/session.js';
+    (async () => {
+      await requireAuthOrRedirect();
+      const container = document.getElementById('ordersList');
+      // Demo orders: if you integrate with backend, replace this
+      const demoOrders = JSON.parse(localStorage.getItem('pd_orders') || '[]');
+      if (!demoOrders.length) {
+        container.innerHTML = '<p style="color:#666">You have no orders yet.</p>';
+        return;
+      }
+      demoOrders.forEach((o, i) => {
+        const el = document.createElement('div');
+        el.style.padding = '14px';
+        el.style.border = '1px solid rgba(0,0,0,0.06)';
+        el.style.borderRadius = '8px';
+        el.style.marginBottom = '12px';
+        el.innerHTML = `<div style="display:flex;justify-content:space-between"><strong>Order #${o.id || ('D' + (i + 1))}</strong><span>${o.total || '₦0'}</span></div>
+          <div style="color:#666;margin-top:6px">Status: ${o.status || 'Processing'}</div>`;
+        container.appendChild(el);
+      });
+    })();
+  </script>
+</body>
+
+</html>

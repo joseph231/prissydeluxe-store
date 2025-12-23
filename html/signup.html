@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sign Up — PRISSYDELUXE</title>
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/auth.css">
+</head>
+
+<body>
+
+  <div id="navbar"></div>
+
+  <!-- Dior BG hero -->
+  <header class="page-hero" style="background-image:url('../assets/images/backgrounds/bg-3.jpg');" role="banner">
+    <div class="hero-inner">
+      <img src="../assets/images/logo.png" class="page-hero-logo" alt="PRISSYDELUXE">
+      <h1>Create Account</h1>
+      <p style="opacity:.9">Join the world of refined luxury</p>
+    </div>
+  </header>
+
+  <!-- Overlapping signup card -->
+  <main class="container" style="margin-top:-80px; z-index:50; position:relative;">
+    <div class="auth-card" role="main" aria-label="Signup form">
+      <h2 class="auth-title">Create account</h2>
+
+      <form id="signupForm" class="auth-form" novalidate>
+        <div class="auth-field">
+          <label for="fullname">Full name</label>
+          <input id="fullname" name="fullname" type="text" required>
+        </div>
+
+        <div class="auth-field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required>
+        </div>
+
+        <div class="auth-field">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" required>
+        </div>
+
+        <button type="submit" class="auth-btn">Create Account</button>
+
+        <p class="auth-switch" style="margin-top:12px">Already have an account? <a href="./login.html">Login</a></p>
+      </form>
+    </div>
+  </main>
+
+  <div id="footer"></div>
+
+  <script>
+    document.getElementById('signupForm')?.addEventListener('submit', function (e) {
+      e.preventDefault();
+      // placeholder behavior until backend (supabase) is wired
+      localStorage.setItem('pd_logged', '1');
+      window.location.href = './shop.html';
+    });
+  </script>
+</body>
+
+</html>
