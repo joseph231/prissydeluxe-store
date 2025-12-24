@@ -9,8 +9,8 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
  */
 export const config = {
   auth: {
-    mode: "optional",
-  },
+    verify_jwt: false
+  }
 };
 
 /**
