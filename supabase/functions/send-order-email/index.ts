@@ -9,7 +9,7 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
  */
 export const config = {
   auth: {
-    verify_jwt: false
+    verifyJWT: false
   }
 };
 
