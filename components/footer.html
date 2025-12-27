@@ -1,52 +1,74 @@
 <!-- /components/footer.html -->
 <footer class="site-footer" role="contentinfo">
   <div class="container footer-grid">
+
+    <!-- BRAND -->
     <div class="footer-column footer-brand">
       <img src="/assets/images/logo.png" alt="PRISSYDELUXE" class="footer-logo">
       <div class="footer-brand-name">PRISSYDELUXE</div>
       <div class="footer-brand-tag">FEEL THE ILLUSION OF HEAVEN</div>
     </div>
 
+    <!-- QUICK LINKS -->
     <div class="footer-column footer-links">
-      <h3 class="footer-title">Quick links</h3>
+      <h3 class="footer-title">Quick Links</h3>
       <ul>
         <li><a href="/index.html">Home</a></li>
-        <li><a href="/html/login.html">Shop</a></li>
+        <li><a href="/html/shop.html">Shop</a></li>
         <li><a href="/html/about.html">About</a></li>
         <li><a href="/html/contact.html">Contact</a></li>
       </ul>
     </div>
 
+    <!-- CONTACT -->
     <div class="footer-column footer-contact">
       <h3 class="footer-title">Contact & Orders</h3>
-      <p class="muted">Bank transfer accepted. Use WhatsApp order after checkout.</p>
-      <p class="muted">Email: <a href="mailto:prissydeluxe@example.com">prissydeluxe@example.com</a></p>
+      <p class="muted">
+        Bank transfer accepted. Orders are confirmed after payment.
+      </p>
+      <p class="muted">
+        Email:
+        <a href="mailto:admin@prissydeluxe.store">
+          admin@prissydeluxe.store
+        </a>
+      </p>
     </div>
 
+    <!-- SOCIAL LINKS -->
     <div class="footer-column footer-socials">
-      <h3 class="footer-title">Follow us</h3>
+      <h3 class="footer-title">Follow Us</h3>
       <div class="social-links">
-        <a href="#" target="_blank" rel="noopener">Instagram</a><br>
-        <a href="#" target="_blank" rel="noopener">TikTok</a><br>
-        <a href="#" target="_blank" rel="noopener">WhatsApp</a>
+        <!-- Replace each href with real links -->
+        <a href="#" target="_blank" rel="noopener">Instagram</a><br> <!-- PLACEHOLDER_INSTAGRAM -->
+        <a href="#" target="_blank" rel="noopener">TikTok</a><br> <!-- PLACEHOLDER_TIKTOK -->
+        <a href="#" target="_blank" rel="noopener">WhatsApp</a><br> <!-- PLACEHOLDER_WHATSAPP -->
+        <a href="#" target="_blank" rel="noopener">YouTube</a><br> <!-- PLACEHOLDER_YOUTUBE -->
+        <a href="#" target="_blank" rel="noopener">Facebook</a> <!-- PLACEHOLDER_FACEBOOK -->
       </div>
     </div>
+
   </div>
 
-  <div class="container" style="padding-top:18px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;">
-    <nav class="legal-links" style="font-size:14px;">
-      <a href="/html/legal-terms.html">Legal Terms</a>&nbsp;·&nbsp;
-      <a href="/html/sales-terms.html">Sales Terms</a>&nbsp;·&nbsp;
+  <!-- LEGAL -->
+  <div class="container footer-bottom">
+    <nav class="legal-links" aria-label="Legal">
+      <a href="/html/legal-terms.html">Legal Terms</a>
+      <span>·</span>
+      <a href="/html/sales-terms.html">Sales Terms</a>
+      <span>·</span>
       <a href="/html/privacy.html">Privacy Policy</a>
     </nav>
 
-    <div class="copyright" style="font-size:14px;margin-top:10px">© <span id="year"></span> PRISSYDELUXE.</div>
+    <div class="copyright">
+      © <span id="year"></span> PRISSYDELUXE.
+    </div>
   </div>
 
+  <!-- YEAR -->
   <script>
-    (function(){
-      const yearEl = document.getElementById('year');
-      if(yearEl) yearEl.textContent = new Date().getFullYear();
+    (function () {
+      const year = document.getElementById("year");
+      if (year) year.textContent = new Date().getFullYear();
     })();
   </script>
 </footer>

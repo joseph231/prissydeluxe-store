@@ -1,10 +1,13 @@
 // /js/app/shop.js
-// Load products from Supabase with pagination
+// Product listing with pagination + local cart integration (pdCart)
 
 document.addEventListener("DOMContentLoaded", () => {
   initShop();
 });
 
+/* ----------------------------------
+   INITIALIZATION
+----------------------------------- */
 async function initShop() {
   if (!window.supabase) {
     console.error("Supabase client missing");
@@ -13,18 +16,25 @@ async function initShop() {
 
   const url = new URL(window.location.href);
   const page = parseInt(url.searchParams.get("page") || "1", 10);
-  const limit = 12; // products per page
+  const limit = 12;
+
   const from = (page - 1) * limit;
   const to = from + limit - 1;
 
-  loadProducts(from, to, page);
+  await loadProducts(from, to, page);
+  updateCartBadge();
 }
 
+/* ----------------------------------
+   LOAD PRODUCTS
+----------------------------------- */
 async function loadProducts(from, to, currentPage) {
   const grid = document.getElementById("productGrid");
   const pagination = document.getElementById("pagination");
 
-  grid.innerHTML = "Loading products...";
+  if (!grid) return;
+
+  grid.textContent = "Loading products...";
 
   const { data, error, count } = await window.supabase
     .from("products")
@@ -33,69 +43,82 @@ async function loadProducts(from, to, currentPage) {
     .range(from, to);
 
   if (error) {
-    grid.innerHTML = "Failed to load products.";
     console.error(error);
+    grid.textContent = "Failed to load products.";
     return;
   }
 
   if (!data || data.length === 0) {
-    grid.innerHTML = "No products available.";
+    grid.innerHTML = '<p class="no-products">No products available.</p>';
+    if (pagination) pagination.innerHTML = '';
     return;
   }
 
-  grid.innerHTML = data
-    .map(
-      (p) => `
-        <div class="product-card">
-          <img src="${p.image_url}" alt="${p.title}">
-          <h3>${p.title}</h3>
-          <p class="price">₦${p.price}</p>
-          <button class="add-to-cart" data-id="${p.id}">Add to Cart</button>
-        </div>`
-    )
-    .join("");
+  grid.innerHTML = data.map(p => `
+    <div class="product-card">
+      <img src="${p.image_url}" alt="${p.title}">
+      <h3>${p.title}</h3>
+      <p class="price">₦${Number(p.price).toLocaleString()}</p>
+      <button class="add-to-cart"
+        data-id="${p.id}"
+        data-title="${p.title}"
+        data-price="${p.price}"
+        data-image="${p.image_url}">
+        Add to Cart
+      </button>
+    </div>
+  `).join("");
 
-  setupAddToCartButtons();
+  bindAddToCartButtons();
   setupPagination(count, currentPage);
 }
 
-function setupAddToCartButtons() {
-  const buttons = document.querySelectorAll(".add-to-cart");
-  buttons.forEach((btn) => {
-    btn.addEventListener("click", async () => {
-      const productId = btn.getAttribute("data-id");
+/* ----------------------------------
+   ADD TO CART (LOCAL)
+----------------------------------- */
+function bindAddToCartButtons() {
+  document.querySelectorAll(".add-to-cart").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const item = {
+        id: btn.dataset.id,
+        title: btn.dataset.title,
+        price: btn.dataset.price,
+        image: btn.dataset.image
+      };
 
-      const session = (await window.supabase.auth.getSession()).data.session;
-      if (!session) {
-        window.location.href = "../html/login.html";
-        return;
-      }
+      window.pdCart.addToCart(item);
+      updateCartBadge();
 
-      const { error } = await window.supabase.from("cart_items").insert([
-        {
-          user_id: session.user.id,
-          product_id: productId,
-          quantity: 1,
-        },
-      ]);
+      btn.textContent = "Added ✓";
+      btn.disabled = true;
 
-      if (error) {
-        console.error(error);
-        alert("Failed to add to cart.");
-      } else {
-        btn.textContent = "Added ✓";
-        btn.classList.add("added");
-        setTimeout(() => {
-          btn.textContent = "Add to Cart";
-          btn.classList.remove("added");
-        }, 1500);
-      }
+      setTimeout(() => {
+        btn.textContent = "Add to Cart";
+        btn.disabled = false;
+      }, 1200);
     });
   });
 }
 
+/* ----------------------------------
+   CART BADGE
+----------------------------------- */
+function updateCartBadge() {
+  const badge = document.getElementById("navCartCount");
+  if (!badge) return;
+
+  const cart = window.pdCart.getCart();
+  const count = cart.reduce((acc, i) => acc + i.quantity, 0);
+  badge.textContent = count;
+}
+
+/* ----------------------------------
+   PAGINATION
+----------------------------------- */
 function setupPagination(totalCount, currentPage) {
   const pagination = document.getElementById("pagination");
+  if (!pagination) return;
+
   const limit = 12;
   const totalPages = Math.ceil(totalCount / limit);
 
@@ -106,9 +129,7 @@ function setupPagination(totalCount, currentPage) {
   }
 
   for (let i = 1; i <= totalPages; i++) {
-    html += `<a href="?page=${i}" class="page-btn ${
-      i === currentPage ? "active" : ""
-    }">${i}</a>`;
+    html += `<a href="?page=${i}" class="page-btn ${i === currentPage ? "active" : ""}">${i}</a>`;
   }
 
   if (currentPage < totalPages) {
