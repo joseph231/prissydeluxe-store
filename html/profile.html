@@ -70,6 +70,11 @@
       });
     })();
   </script>
+  <script type="module">
+    import { requireAuthOrRedirect } from "../js/auth/session.js";
+    requireAuthOrRedirect();
+  </script>
+
 </body>
 
 </html>

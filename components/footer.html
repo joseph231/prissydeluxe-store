@@ -1,5 +1,6 @@
 <!-- /components/footer.html -->
 <footer class="site-footer" role="contentinfo">
+
   <div class="container footer-grid">
 
     <!-- BRAND -->
@@ -14,61 +15,64 @@
       <h3 class="footer-title">Quick Links</h3>
       <ul>
         <li><a href="/index.html">Home</a></li>
-        <li><a href="/html/shop.html">Shop</a></li>
+        <li><a href="/html/login.html">Shop</a></li>
         <li><a href="/html/about.html">About</a></li>
         <li><a href="/html/contact.html">Contact</a></li>
       </ul>
     </div>
 
-    <!-- CONTACT -->
+    <!-- CONTACT & ORDERS -->
     <div class="footer-column footer-contact">
       <h3 class="footer-title">Contact & Orders</h3>
       <p class="muted">
-        Bank transfer accepted. Orders are confirmed after payment.
+        Bank transfer accepted.<br>
+        Orders confirmed after payment.
       </p>
       <p class="muted">
         Email:
-        <a href="mailto:admin@prissydeluxe.store">
-          admin@prissydeluxe.store
+        <a href="mailto:prissydeluxe@gmail.com">
+          prissydeluxe@gmail.com
         </a>
       </p>
     </div>
 
-    <!-- SOCIAL LINKS -->
-    <div class="footer-column footer-socials">
-      <h3 class="footer-title">Follow Us</h3>
-      <div class="social-links">
-        <!-- Replace each href with real links -->
-        <a href="#" target="_blank" rel="noopener">Instagram</a><br> <!-- PLACEHOLDER_INSTAGRAM -->
-        <a href="#" target="_blank" rel="noopener">TikTok</a><br> <!-- PLACEHOLDER_TIKTOK -->
-        <a href="#" target="_blank" rel="noopener">WhatsApp</a><br> <!-- PLACEHOLDER_WHATSAPP -->
-        <a href="#" target="_blank" rel="noopener">YouTube</a><br> <!-- PLACEHOLDER_YOUTUBE -->
-        <a href="#" target="_blank" rel="noopener">Facebook</a> <!-- PLACEHOLDER_FACEBOOK -->
-      </div>
+    <!-- LEGAL LINKS (REPLACES FOLLOW US) -->
+    <div class="footer-column footer-legal">
+      <h3 class="footer-title">Legal</h3>
+      <ul>
+        <li><a href="/html/legal-terms.html">Legal Terms</a></li>
+        <li><a href="/html/sales-terms.html">Sales Terms</a></li>
+        <li><a href="/html/privacy.html">Privacy Policy</a></li>
+      </ul>
     </div>
 
   </div>
 
-  <!-- LEGAL -->
+  <!-- BOTTOM SOCIAL BAR -->
   <div class="container footer-bottom">
-    <nav class="legal-links" aria-label="Legal">
-      <a href="/html/legal-terms.html">Legal Terms</a>
+    <nav class="footer-socials-horizontal" aria-label="Social links">
+      <!-- PLACEHOLDERS: replace # -->
+      <a href="#" target="_blank" rel="noopener">WhatsApp</a>
       <span>·</span>
-      <a href="/html/sales-terms.html">Sales Terms</a>
+      <a href="#" target="_blank" rel="noopener">Facebook</a>
       <span>·</span>
-      <a href="/html/privacy.html">Privacy Policy</a>
+      <a href="#" target="_blank" rel="noopener">Instagram</a>
+      <span>·</span>
+      <a href="#" target="_blank" rel="noopener">YouTube</a>
+      <span>·</span>
+      <a href="#" target="_blank" rel="noopener">TikTok</a>
     </nav>
 
     <div class="copyright">
-      © <span id="year"></span> PRISSYDELUXE.
+      © <span id="year"></span> PRISSYDELUXE. All rights reserved.
     </div>
   </div>
 
-  <!-- YEAR -->
   <script>
     (function () {
-      const year = document.getElementById("year");
-      if (year) year.textContent = new Date().getFullYear();
+      const y = document.getElementById("year");
+      if (y) y.textContent = new Date().getFullYear();
     })();
   </script>
+
 </footer>

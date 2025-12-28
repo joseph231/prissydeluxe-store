@@ -64,6 +64,10 @@
       alert('Receipt submitted — (demo). In production the file would be sent to backend.');
     });
   </script>
+  <script type="module">
+    import { requireAuthOrRedirect } from "../js/auth/session.js";
+    requireAuthOrRedirect();
+  </script>
 </body>
 
 </html>
