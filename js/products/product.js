@@ -1,73 +1,71 @@
-// product.js — FINAL, error-proof, Supabase-ready
+// product.js — FINAL, STABLE, ID-CONSISTENT
 
 console.log("product.js loaded");
 
-// 1 — Demo products (always shown if Supabase unavailable)
-const DEMO_PRODUCTS = [
+const BASE_PRODUCTS = [
   {
-    id: 1,
+    id: "demo-1",
     title: "Royal Rose Elixir",
     price: "₦45,000",
-    image: "assets/images/products/p1.jpg"
+    image: "assets/images/products/p1.jpg",
+    description: "Elegant rose fragrance"
   },
   {
-    id: 2,
+    id: "demo-2",
     title: "Amber Noir Essence",
     price: "₦55,000",
-    image: "assets/images/products/p2.jpg"
+    image: "assets/images/products/p2.jpg",
+    description: "Warm amber tones"
   },
   {
-    id: 3,
+    id: "demo-3",
     title: "Velvet Oud Parfum",
     price: "₦60,000",
-    image: "assets/images/products/p3.jpg"
+    image: "assets/images/products/p3.jpg",
+    description: "Deep oud luxury"
   },
   {
-    id: 4,
+    id: "demo-4",
     title: "Lilac Whisper Mist",
     price: "₦38,000",
-    image: "assets/images/products/p4.jpg"
+    image: "assets/images/products/p4.jpg",
+    description: "Soft floral notes"
   },
   {
-    id: 5,
+    id: "demo-5",
     title: "Citrus Bloom Fresh",
     price: "₦32,000",
-    image: "assets/images/products/p5.jpg"
+    image: "assets/images/products/p5.jpg",
+    description: "Bright citrus scent"
   }
 ];
 
-// Expand to simulate 30 products (pagination test)
-let EXPANDED = [];
+// Expand to ~30 products
+let ALL_PRODUCTS = [];
 for (let i = 0; i < 6; i++) {
-  DEMO_PRODUCTS.forEach(p => {
-    EXPANDED.push({
+  BASE_PRODUCTS.forEach(p => {
+    ALL_PRODUCTS.push({
       ...p,
-      id: EXPANDED.length + 1
+      id: `${p.id}-${i}`
     });
   });
 }
 
-// 2 — Main Exported Function
+// SHOP FETCH
 window.fetchProductsFromSupabase = async function ({ page, perPage, q }) {
+  let results = [...ALL_PRODUCTS];
 
-  let all = EXPANDED;
-
-  // search filter
   if (q) {
-    all = all.filter(p =>
+    results = results.filter(p =>
       p.title.toLowerCase().includes(q.toLowerCase())
     );
   }
 
-  // pagination slice
   const start = (page - 1) * perPage;
-  const end = start + perPage;
-
-  return all.slice(start, end);
+  return results.slice(start, start + perPage);
 };
 
-// 3 — Get 1 product by ID
+// SINGLE PRODUCT
 window.getSingleProduct = async function (id) {
-  let p = EXPANDED.find(x => String(x.id) === String(id));
-  return p || null;
+  return ALL_PRODUCTS.find(p => p.id === id) || null;
 };
