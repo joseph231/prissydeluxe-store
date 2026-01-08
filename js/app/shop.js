@@ -1,140 +1,164 @@
-// /js/app/shop.js
-// Product listing with pagination + local cart integration (pdCart)
+// /js/products/shop.js
+// STEP 2.1 — FINAL, STABLE SHOP LOGIC
 
-document.addEventListener("DOMContentLoaded", () => {
-  initShop();
-});
+console.log("shop.js loaded");
 
-/* ----------------------------------
-   INITIALIZATION
------------------------------------ */
+document.addEventListener("DOMContentLoaded", initShop);
+
+const PER_PAGE = 12;
+let currentPage = 1;
+let allProducts = [];
+
 async function initShop() {
-  if (!window.supabase) {
-    console.error("Supabase client missing");
+  if (typeof window.fetchProductsFromSupabase !== "function") {
+    console.error("fetchProductsFromSupabase missing — product.js not loaded");
     return;
   }
 
-  const url = new URL(window.location.href);
-  const page = parseInt(url.searchParams.get("page") || "1", 10);
-  const limit = 12;
+  allProducts = await window.fetchProductsFromSupabase({
+    page: 1,
+    perPage: 1000
+  });
 
-  const from = (page - 1) * limit;
-  const to = from + limit - 1;
+  if (!Array.isArray(allProducts)) {
+    console.error("Invalid product data");
+    return;
+  }
 
-  await loadProducts(from, to, page);
-  updateCartBadge();
+  bindUI();
+  render();
+  updateCartLink();
 }
 
-/* ----------------------------------
-   LOAD PRODUCTS
------------------------------------ */
-async function loadProducts(from, to, currentPage) {
-  const grid = document.getElementById("productGrid");
-  const pagination = document.getElementById("pagination");
-
-  if (!grid) return;
-
-  grid.textContent = "Loading products...";
-
-  const { data, error, count } = await window.supabase
-    .from("products")
-    .select("*", { count: "exact" })
-    .order("created_at", { ascending: false })
-    .range(from, to);
-
-  if (error) {
-    console.error(error);
-    grid.textContent = "Failed to load products.";
-    return;
-  }
-
-  if (!data || data.length === 0) {
-    grid.innerHTML = '<p class="no-products">No products available.</p>';
-    if (pagination) pagination.innerHTML = '';
-    return;
-  }
-
-  grid.innerHTML = data.map(p => `
-    <div class="product-card">
-      <img src="${p.image_url}" alt="${p.title}">
-      <h3>${p.title}</h3>
-      <p class="price">₦${Number(p.price).toLocaleString()}</p>
-      <button class="add-to-cart"
-        data-id="${p.id}"
-        data-title="${p.title}"
-        data-price="${p.price}"
-        data-image="${p.image_url}">
-        Add to Cart
-      </button>
-    </div>
-  `).join("");
-
-  bindAddToCartButtons();
-  setupPagination(count, currentPage);
-}
-
-/* ----------------------------------
-   ADD TO CART (LOCAL)
------------------------------------ */
-function bindAddToCartButtons() {
-  document.querySelectorAll(".add-to-cart").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const item = {
-        id: btn.dataset.id,
-        title: btn.dataset.title,
-        price: btn.dataset.price,
-        image: btn.dataset.image
-      };
-
-      window.pdCart.addToCart(item);
-      updateCartBadge();
-
-      btn.textContent = "Added ✓";
-      btn.disabled = true;
-
-      setTimeout(() => {
-        btn.textContent = "Add to Cart";
-        btn.disabled = false;
-      }, 1200);
+function bindUI() {
+  document.getElementById("searchBtn")
+    .addEventListener("click", () => {
+      currentPage = 1;
+      render();
     });
+
+  document.getElementById("shopSearch")
+    .addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        currentPage = 1;
+        render();
+      }
+    });
+
+  document.getElementById("prevPage")
+    .addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage--;
+        render();
+      }
+    });
+
+  document.getElementById("nextPage")
+    .addEventListener("click", () => {
+      if (currentPage < totalPages()) {
+        currentPage++;
+        render();
+      }
+    });
+}
+
+function filteredProducts() {
+  const q = document.getElementById("shopSearch").value.trim().toLowerCase();
+  if (!q) return allProducts;
+  return allProducts.filter(p =>
+    (p.title || "").toLowerCase().includes(q)
+  );
+}
+
+function totalPages() {
+  return Math.max(1, Math.ceil(filteredProducts().length / PER_PAGE));
+}
+
+function render() {
+  const list = document.getElementById("productList");
+  const pageInfo = document.getElementById("pageInfo");
+
+  const products = filteredProducts();
+  const start = (currentPage - 1) * PER_PAGE;
+  const pageItems = products.slice(start, start + PER_PAGE);
+
+  list.innerHTML = "";
+
+  if (!pageItems.length) {
+    list.innerHTML = `<p class="empty-text">No products found.</p>`;
+    return;
+  }
+
+  pageItems.forEach(p => {
+    const card = document.createElement("div");
+    card.className = "product-card";
+
+    card.innerHTML = `
+      <img src="../${p.image}" alt="${p.title}">
+      <h4>${p.title}</h4>
+      <p class="product-price">${p.price}</p>
+
+      <div class="product-actions">
+        <a class="btn-outline" href="./product.html?id=${p.id}">View</a>
+        <button class="btn-add"
+          data-id="${p.id}"
+          data-title="${p.title}"
+          data-price="${p.price}"
+          data-image="../${p.image}">
+          Add to Cart
+        </button>
+      </div>
+    `;
+
+    list.appendChild(card);
+  });
+
+  pageInfo.textContent = `Page ${currentPage} of ${totalPages()}`;
+  bindAddToCart();
+}
+
+function bindAddToCart() {
+  document.querySelectorAll(".btn-add").forEach(btn => {
+    btn.onclick = () => {
+      const cart = JSON.parse(localStorage.getItem("pd_cart") || "[]");
+      const id = btn.dataset.id;
+
+      const existing = cart.find(i => i.id == id);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({
+          id,
+          title: btn.dataset.title,
+          price: btn.dataset.price,
+          image: btn.dataset.image,
+          qty: 1
+        });
+      }
+
+      localStorage.setItem("pd_cart", JSON.stringify(cart));
+      btn.textContent = "Added ✓";
+
+      setTimeout(() => btn.textContent = "Add to Cart", 1200);
+    };
   });
 }
 
-/* ----------------------------------
-   CART BADGE
------------------------------------ */
-function updateCartBadge() {
-  const badge = document.getElementById("navCartCount");
-  if (!badge) return;
+async function updateCartLink() {
+  const cartBtn = document.getElementById("floatingCart");
+  if (!cartBtn) return;
 
-  const cart = window.pdCart.getCart();
-  const count = cart.reduce((acc, i) => acc + i.quantity, 0);
-  badge.textContent = count;
-}
+  let logged = false;
 
-/* ----------------------------------
-   PAGINATION
------------------------------------ */
-function setupPagination(totalCount, currentPage) {
-  const pagination = document.getElementById("pagination");
-  if (!pagination) return;
+  try {
+    if (window.supabase?.auth?.getSession) {
+      const { data } = await window.supabase.auth.getSession();
+      logged = !!data.session;
+    }
+  } catch { }
 
-  const limit = 12;
-  const totalPages = Math.ceil(totalCount / limit);
+  if (!logged) logged = !!localStorage.getItem("pd_logged");
 
-  let html = "";
-
-  if (currentPage > 1) {
-    html += `<a href="?page=${currentPage - 1}" class="page-btn">Prev</a>`;
-  }
-
-  for (let i = 1; i <= totalPages; i++) {
-    html += `<a href="?page=${i}" class="page-btn ${i === currentPage ? "active" : ""}">${i}</a>`;
-  }
-
-  if (currentPage < totalPages) {
-    html += `<a href="?page=${currentPage + 1}" class="page-btn">Next</a>`;
-  }
-
-  pagination.innerHTML = html;
+  cartBtn.href = logged ? "./cart.html" : "./login.html";
 }
