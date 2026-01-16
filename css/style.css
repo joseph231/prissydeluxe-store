@@ -166,6 +166,42 @@ nav.nav-visible {
    cursor: pointer
 }
 
+.nav-cart {
+   display: inline-flex;
+   align-items: center;
+   gap: 6px;
+   font-weight: 600;
+   text-decoration:
+      none;
+}
+
+/* NAV CART */
+#navCart {
+   display: inline-flex;
+   align-items: center;
+   gap: 6px;
+   padding: 8px 12px;
+   border-radius: 20px;
+   background: #000;
+   color: #fff;
+   font-weight: 600;
+   text-decoration: none;
+   transition: background 0.25s ease;
+}
+
+#navCart:hover {
+   background: #222;
+}
+
+#navCartCount {
+   background: #fff;
+   color: #000;
+   font-size: 12px;
+   padding: 2px 6px;
+   border-radius: 10px;
+}
+
+
 /* small cart bubble */
 .cart-bubble {
    display: inline-block;
@@ -424,6 +460,22 @@ nav.nav-visible {
    background-clip: padding-box;
 }
 
+.auth-btn,
+.btn-primary {
+   background: #000;
+   color: #fff;
+   padding: 12px 20px;
+   border-radius: 8px;
+   border: none;
+   cursor: pointer;
+   font-weight: 600;
+}
+
+.auth-btn:hover,
+.btn-primary:hover {
+   opacity: 0.9;
+}
+
 
 .btn-add:hover,
 .add-to-cart:hover {
@@ -435,6 +487,48 @@ nav.nav-visible {
    color: #fff;
    cursor: default
 }
+
+/* Product action buttons */
+.product-actions {
+   display: flex;
+   gap: 12px;
+   margin-top: 12px;
+}
+
+.btn-add,
+.btn-outline {
+   padding: 10px 16px;
+   border-radius: 6px;
+   font-size: 14px;
+   cursor: pointer;
+   text-decoration: none;
+   font-weight: 600;
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.btn-add {
+   background: #000;
+   color: #fff;
+   border: none;
+}
+
+.btn-add:hover {
+   opacity: 0.9;
+}
+
+.btn-outline {
+   border: 1px solid #000;
+   color: #000;
+   background: transparent;
+}
+
+.btn-outline:hover {
+   background: #000;
+   color: #fff;
+}
+
 
 
 /* ============================================================
@@ -527,6 +621,7 @@ nav.nav-visible {
    padding: 8px 6px;
    border-bottom: 1px solid rgba(0, 0, 0, 0.04)
 }
+
 
 /* ============================================================
    8. FOOTER — FINAL STABLE LAYOUT

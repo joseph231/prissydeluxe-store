@@ -1,42 +1,36 @@
 <!doctype html>
 <html lang="en">
-<link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
 
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Products — PRISSYDELUXE</title>
+  <title>Product — PRISSYDELUXE</title>
 
+  <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/product.css">
 
   <script type="module" src="../supabase.js" defer></script>
   <script src="../js/ui/components.js" defer></script>
-  <script type="module" src="../js/products/product.js" defer></script>
+  <script src="../js/products/product-page.js" defer></script>
 </head>
 
 <body>
+
   <div id="navbar"></div>
 
-  <header class="page-hero" style="background-image:url('../assets/images/backgrounds/bg-4.jpg')"
-    aria-label="Products hero">
+  <!-- KEEP YOUR HERO -->
+  <header class="page-hero" style="background-image:url('../assets/images/backgrounds/bg-4.jpg')">
     <div class="hero-inner">
-      <img src="../assets/images/logo.png" alt="PRISSYDELUXE" class="page-hero-logo">
-      <h1>All Products</h1>
-      <p>Browse the full collection</p>
+      <img src="../assets/images/logo.png" class="page-hero-logo" alt="PRISSYDELUXE">
+      <h1>Product Details</h1>
+      <p>Discover the fragrance</p>
     </div>
   </header>
 
-  <main class="container" style="padding:40px 0 80px">
-    <section>
-      <h2 class="section-title">All Products</h2>
-      <div id="productList" class="product-grid" aria-live="polite"></div>
-      <nav class="pagination" aria-label="Pagination">
-        <button id="prevPage" disabled>Previous</button>
-        <span id="pageInfo" style="align-self:center;color:#666;margin:0 12px">Page 1</span>
-        <button id="nextPage">Next</button>
-      </nav>
-    </section>
+  <main class="container" style="padding:60px 0">
+    <!-- REQUIRED FOR JS -->
+    <div id="productContainer"></div>
   </main>
 
   <div id="footer"></div>
