@@ -12,7 +12,7 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 // ----------------------------------------------
 
 if (!SUPABASE_URL || SUPABASE_URL.includes("your-project-id") ||
-  !SUPABASE_ANON_KEY || SUPABASE_ANON_KEY.includes("your-anon-public-key")) {
+  !SUPABASE_ANON_KEY || SUPABASE_ANON_KEY.includes("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtuam9qZnBocWRwYnJxYmZyc3B4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzNTkwNzIsImV4cCI6MjA4MDkzNTA3Mn0.LSPj_k_LedhbSbIAaPVrVgJsHiTtoFik-L60XWzwq1o")) {
   console.warn("Supabase disabled — using LOCAL MODE.");
   SUPABASE_ENABLED = false;
 }

@@ -1,10 +1,7 @@
 // /js/app/shop.js
-console.log("shop.js loaded");
+import { supabase } from "../core/supabaseClient.js";
 
-if (!window.supabase) {
-  console.error("Supabase not available on window");
-  throw new Error("Supabase not initialized");
-}
+console.log("shop.js loaded");
 
 const PRODUCTS_PER_PAGE = 12;
 let currentPage = 1;
@@ -16,7 +13,7 @@ async function loadProducts(page = 1) {
   const from = (page - 1) * PRODUCTS_PER_PAGE;
   const to = from + PRODUCTS_PER_PAGE - 1;
 
-  const { data, error, count } = await window.supabase
+  const { data, error, count } = await supabase
     .from("products")
     .select("*", { count: "exact" })
     .eq("in_stock", true)
@@ -52,23 +49,21 @@ function renderProducts(products) {
 }
 
 function renderPagination(total) {
-  const pages = Math.ceil(total / PRODUCTS_PER_PAGE);
   pagination.innerHTML = "";
 
-  const pages = Math.ceil(total / PRODUCTS_PER_PAGE);
-  if (pages <= 1) return;
+  const totalPages = Math.ceil(total / PRODUCTS_PER_PAGE);
+  if (totalPages <= 1) return;
 
-  for (let i = 1; i <= pages; i++) {
-    pagination.innerHTML += `
-      <button ${i === currentPage ? "class='active'" : ""}
-        onclick="goToPage(${i})">${i}</button>
-    `;
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i;
+    if (i === currentPage) btn.classList.add("active");
+    btn.onclick = () => {
+      currentPage = i;
+      loadProducts(i);
+    };
+    pagination.appendChild(btn);
   }
 }
-
-window.goToPage = function (page) {
-  currentPage = page;
-  loadProducts(page);
-};
 
 loadProducts();
