@@ -17,9 +17,12 @@
   <script src="../js/ui/components.js" defer></script>
 
   <!-- PRODUCTS (ORDER MATTERS) -->
+  <script src="../supabase.js" defer></script>
+  <script src="../js/ui/components.js" defer></script>
   <script src="../js/products/product.js" defer></script>
   <script src="../js/products/filters.js" defer></script>
   <script src="../js/app/shop.js" defer></script>
+
 </head>
 
 <body>
@@ -48,10 +51,10 @@
 
     <div id="productList" class="product-grid"></div>
 
-    <nav class="pagination">
-      <button id="prevPage">Previous</button>
-      <span id="pageInfo">Page 1</span>
-      <button id="nextPage">Next</button>
+    <nav id="pagination" class="pagination"></nav>
+    <button id="prevPage">Previous</button>
+    <span id="pageInfo">Page 1</span>
+    <button id="nextPage">Next</button>
     </nav>
 
   </main>
