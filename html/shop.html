@@ -1,31 +1,22 @@
 <!doctype html>
 <html lang="en">
-<link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
 
 <head>
+  <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
+
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Shop — PRISSYDELUXE</title>
 
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/product.css">
 
-  <!-- Supabase (optional) -->
-  <script type="module" src="../supabase.js" defer></script>
-
-  <!-- UI -->
-  <script src="../js/ui/components.js" defer></script>
-
-  <!-- PRODUCTS (ORDER MATTERS) -->
-  <script src="../supabase.js" defer></script>
-  <script src="../js/ui/components.js" defer></script>
-  <script src="../js/products/product.js" defer></script>
-  <script src="../js/products/filters.js" defer></script>
-  <script src="../js/app/shop.js" defer></script>
-
+  <!-- ENTRY POINT (ES MODULE ONLY) -->
+  <script type="module" src="../js/app/shop.js"></script>
 </head>
 
 <body>
+
   <div id="navbar"></div>
 
   <!-- HERO -->
@@ -49,18 +40,15 @@
 
     <h2 class="section-title">Collection</h2>
 
-    <div id="productList" class="product-grid"></div>
+    <!-- PRODUCTS -->
+    <div id="products-grid" class="product-grid"></div>
 
+    <!-- PAGINATION -->
     <nav id="pagination" class="pagination"></nav>
-    <button id="prevPage">Previous</button>
-    <span id="pageInfo">Page 1</span>
-    <button id="nextPage">Next</button>
-    </nav>
 
   </main>
 
   <div id="footer"></div>
-
 
 </body>
 
