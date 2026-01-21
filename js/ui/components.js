@@ -69,14 +69,14 @@
     function setInert(node, inert) {
       if (!node) return;
       if ('inert' in node) {
-        inert ? node.setAttribute('inert','') : node.removeAttribute('inert');
+        inert ? node.setAttribute('inert', '') : node.removeAttribute('inert');
       } else {
         node.setAttribute('aria-hidden', inert ? 'true' : 'false');
       }
     }
     if (mobileMenu) { setInert(mobileMenu, true); }
-    openBtn?.addEventListener('click', () => { mobileMenu?.classList.add('open'); setInert(mobileMenu,false); mobileMenu?.querySelector('a,button,input,textarea')?.focus(); });
-    closeBtn?.addEventListener('click', () => { mobileMenu?.classList.remove('open'); setInert(mobileMenu,true); });
+    openBtn?.addEventListener('click', () => { mobileMenu?.classList.add('open'); setInert(mobileMenu, false); mobileMenu?.querySelector('a,button,input,textarea')?.focus(); });
+    closeBtn?.addEventListener('click', () => { mobileMenu?.classList.remove('open'); setInert(mobileMenu, true); });
 
     // CART: always go to cart.html — do not force immediate auth redirect here
     const cartBtn = safeQuery(nav, '#navCart');
@@ -181,5 +181,5 @@
   };
 
   // Run nav user update after insertion
-  window.pdUI.updateNavUser().catch(() => {});
+  window.pdUI.updateNavUser().catch(() => { });
 })();
