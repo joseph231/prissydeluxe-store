@@ -1,41 +1,67 @@
-/* /css/product.css - small product page tweaks */
+/* /css/product.css - Product page layout (FINAL) */
 
 .product-page {
-  display:flex;
-  gap:30px;
-  align-items:flex-start;
-  padding:40px 0;
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  padding: 40px 0;
 }
 
+/* LEFT */
 .product-gallery {
   flex: 1 1 60%;
 }
 
+.thumb-main {
+  width: 100%;
+  padding-top: 80%;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+}
+
+/* THUMBNAILS */
+.thumb-list {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+}
+
+.thumb-list .thumb-item {
+  flex: 0 0 auto;
+  width: 80px;
+  padding-top: 80%;
+  background-size: cover;
+  background-position: center;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+/* RIGHT */
 .product-details {
   flex: 1 1 40%;
 }
 
-.thumb-main {
-  width:100%;
-  padding-top:80%;
-  background-size:cover;
-  background-position:center;
-  border-radius:8px;
+#product-title {
+  font-size: 28px;
+  margin-bottom: 12px;
 }
 
-.thumb-list {
-  margin-top:12px;
-  display:flex;
-  gap:8px;
-  overflow:auto;
+#product-price {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 16px;
 }
-.thumb-list .thumb-item {
-  flex:0 0 auto;
-  width:80px;
-  padding-top:80%;
-  background-size:cover;
-  background-position:center;
-  border-radius:6px;
-  cursor:pointer;
-  border:2px solid transparent;
+
+/* IMPORTANT FIX */
+#product-description {
+  white-space: normal;
+  overflow: visible;
+  max-height: none;
+  line-height: 1.6;
+  font-size: 15px;
+  color: #444;
+  margin-bottom: 24px;
 }

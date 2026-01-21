@@ -6,32 +6,37 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Product — PRISSYDELUXE</title>
 
-  <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/assets/images/favicon.ico">
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/product.css">
 
-  <script type="module" src="../supabase.js" defer></script>
   <script src="../js/ui/components.js" defer></script>
   <script type="module" src="../js/products/product-page.js" defer></script>
-
 </head>
 
 <body>
 
   <div id="navbar"></div>
 
-  <!-- KEEP YOUR HERO -->
   <header class="page-hero" style="background-image:url('../assets/images/backgrounds/bg-4.jpg')">
     <div class="hero-inner">
-      <img src="../assets/images/logo.png" class="page-hero-logo" alt="PRISSYDELUXE">
-      <h1>Product Details</h1>
+      <img src="../assets/images/logo.png" class="page-hero-logo">
+      <h1 id="product-title"></h1>
       <p>Discover the fragrance</p>
     </div>
   </header>
 
   <main class="container" style="padding:60px 0">
-    <!-- REQUIRED FOR JS -->
-    <div id="productContainer"></div>
+    <div class="product-layout">
+      <img id="product-image" class="product-image">
+      <div class="product-info">
+        <p id="product-price" class="price"></p>
+        <p id="product-brand" class="meta"></p>
+        <p id="product-category" class="meta"></p>
+        <p id="product-description"></p>
+        <button id="addToCartBtn" class="btn-primary">Add to Cart</button>
+      </div>
+    </div>
   </main>
 
   <div id="footer"></div>
