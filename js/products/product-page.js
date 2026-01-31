@@ -1,44 +1,42 @@
-// /js/ui/components.js
-// ES Module version — no globals, Netlify safe
+import { supabase } from "../core/supabaseClient.js";
 
-export async function loadLayout() {
-  const isSub = window.location.pathname.includes("/html/");
-  const root = isSub ? ".." : ".";
-  const navPath = `${root}/components/navbar.html`;
-  const footerPath = `${root}/components/footer.html`;
+const params = new URLSearchParams(window.location.search);
+let slug = params.get("slug");
 
-  async function fetchText(path) {
-    const res = await fetch(path, { cache: "no-store" });
-    if (!res.ok) throw new Error(path);
-    return res.text();
-  }
-
-  async function insert(id, path, init) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    try {
-      el.innerHTML = await fetchText(path);
-      if (init) init(el);
-    } catch {
-      el.innerHTML = id === "navbar"
-        ? "<nav>PRISSYDELUXE</nav>"
-        : "<footer>© PRISSYDELUXE</footer>";
-    }
-  }
-
-  function initNavbar(container) {
-    const cartBtn = container.querySelector("#navCart");
-    cartBtn?.addEventListener("click", e => {
-      e.preventDefault();
-      window.location.href = isSub ? "./cart.html" : "./html/cart.html";
-    });
-  }
-
-  function initFooter(container) {
-    const year = container.querySelector("#year");
-    if (year) year.textContent = new Date().getFullYear();
-  }
-
-  await insert("navbar", navPath, initNavbar);
-  await insert("footer", footerPath, initFooter);
+if (!slug) {
+  const parts = window.location.pathname.split("/");
+  slug = parts[parts.length - 1];
 }
+
+async function loadProduct() {
+  if (!slug) return;
+
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("slug", slug)
+    .single();
+
+  if (error || !data) {
+    console.error("Product load error:", error);
+    return;
+  }
+
+  document.getElementById("product-title").textContent = data.title;
+  document.getElementById("product-price").textContent =
+    `₦${Number(data.price).toLocaleString()}`;
+
+  document.getElementById("product-description").textContent =
+    data.description || "";
+
+  const brandEl = document.getElementById("product-brand");
+  if (brandEl) brandEl.textContent = `Brand: ${data.brand || "—"}`;
+
+  const catEl = document.getElementById("product-category");
+  if (catEl) catEl.textContent = `Category: ${data.category || "—"}`;
+
+  const imgEl = document.getElementById("product-image");
+  if (imgEl) imgEl.src = data.image_url;
+}
+
+loadProduct();
