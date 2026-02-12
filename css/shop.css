@@ -1,0 +1,181 @@
+/* =========================================
+   SHOP PAGE — EDITORIAL LUXURY LAYOUT
+========================================= */
+
+/* Reset */
+body {
+    margin: 0;
+    padding: 0;
+}
+
+
+/* =========================================
+   HERO — FULL VIEWPORT
+========================================= */
+
+.shop-hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    background: url("../assets/images/backgrounds/bg-1.webp") center center / cover no-repeat;
+    z-index: 1;
+}
+
+.hero-overlay {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.35);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+    color: #ffffff;
+}
+
+.hero-overlay h1 {
+    font-size: 3.5rem;
+    font-weight: 300;
+    letter-spacing: 6px;
+    margin: 0;
+}
+
+.hero-overlay p {
+    margin-top: 20px;
+    font-size: 1rem;
+    letter-spacing: 3px;
+    opacity: 0.9;
+}
+
+
+/* =========================================
+   CATEGORY STACK (DIOR STYLE)
+========================================= */
+
+.categories {
+    width: 100%;
+}
+
+
+/* Each category = editorial section */
+.category-block {
+    position: relative;
+    width: 100%;
+    height: 75vh;
+    /* Controlled luxury proportion */
+    overflow: hidden;
+    display: block;
+    text-decoration: none;
+    color: white;
+}
+
+
+/* =========================================
+   MEDIA WRAPPER
+========================================= */
+
+.media-wrapper {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+
+/* Works for BOTH image and video */
+.category-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Dior-style cinematic fill */
+    object-position: center;
+}
+
+
+/* =========================================
+   OVERLAY + CENTERED TEXT
+========================================= */
+
+.category-overlay {
+    position: relative;
+    z-index: 2;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0, 0, 0, 0.25);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: background 0.4s ease;
+}
+
+.category-overlay h2 {
+    font-size: 2.2rem;
+    font-weight: 300;
+    letter-spacing: 5px;
+    text-align: center;
+}
+
+
+/* Hover Effect — Subtle Dior Luxury */
+.category-block:hover .category-overlay {
+    background: rgba(0, 0, 0, 0.35);
+}
+
+.category-block:hover .category-media {
+    transform: scale(1.03);
+    transition: transform 1.2s ease;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1024px) {
+
+    .hero-overlay h1 {
+        font-size: 2.5rem;
+    }
+
+    .category-block {
+        height: 60vh;
+    }
+
+    .category-overlay h2 {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .shop-hero {
+        height: 80vh;
+    }
+
+    .category-block {
+        height: 50vh;
+    }
+
+    .hero-overlay h1 {
+        font-size: 2rem;
+        letter-spacing: 4px;
+    }
+
+    .category-overlay h2 {
+        font-size: 1.5rem;
+        letter-spacing: 3px;
+    }
+}

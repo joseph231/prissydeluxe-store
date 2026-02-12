@@ -1,55 +1,104 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
+  <meta charset="UTF-8">
+  <title>Shop | Prissy Deluxe</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Shop — PRISSYDELUXE</title>
-
+  <!-- Main Styles -->
   <link rel="stylesheet" href="../css/style.css">
-  <link rel="stylesheet" href="../css/product.css">
-
-  <!-- ENTRY POINT (ES MODULE ONLY) -->
-  <script src="../js/ui/components.js" defer></script>
-  <script type="module" src="../js/app/shop.js"></script>
+  <link rel="stylesheet" href="../css/shop.css">
 </head>
 
 <body>
 
+  <!-- NAVBAR -->
   <div id="navbar"></div>
 
-  <!-- HERO -->
-  <header class="page-hero" style="background-image:url('../assets/images/backgrounds/bg-3.jpg')">
-    <div class="hero-inner">
-      <img src="../assets/images/logo.png" class="page-hero-logo" alt="">
-      <h1>Shop the Collection</h1>
-      <p>Perfumes • Skincare • Home fragrance</p>
+  <!-- ================= FULL SCREEN HERO ================= -->
+  <section class="shop-hero">
+    <div class="hero-bg bg-1"></div>
+    <div class="hero-overlay">
+      <h1>THE COLLECTION</h1>
+      <p>Elegance in Every Detail</p>
     </div>
-  </header>
+  </section>
 
-  <!-- Floating Cart -->
-  <a id="floatingCart" class="floating-cart-btn" href="./login.html">View Cart</a>
 
-  <main class="container" style="padding:50px 0 100px">
+  <!-- ================= CATEGORY SECTIONS ================= -->
 
-    <div class="search-row" style="justify-content:center">
-      <input id="shopSearch" type="search" placeholder="Search products e.g. 'rose'">
-      <button id="searchBtn" class="icon-btn">Search</button>
-    </div>
+  <section class="categories">
 
-    <h2 class="section-title">Collection</h2>
+    <!-- PERFUMES -->
+    <a href="category.html?type=perfumes" class="category-block">
+      <div class="media-wrapper">
+        <!-- Image Version -->
+        <img src="../assets/images/categories/perfumes.webp" alt="Perfumes" class="category-media">
 
-    <!-- PRODUCTS -->
-    <div id="products-grid" class="product-grid"></div>
+        <!-- If replacing with video, use this instead:
+                <video class="category-media" autoplay muted loop playsinline>
+                    <source src="../assets/videos/perfumes.mp4" type="video/mp4">
+                </video>
+                -->
+      </div>
+      <div class="category-overlay">
+        <h2>PERFUMES</h2>
+      </div>
+    </a>
 
-    <!-- PAGINATION -->
-    <nav id="pagination" class="pagination"></nav>
 
-  </main>
+    <!-- SKINCARE -->
+    <a href="category.html?type=skincare" class="category-block">
+      <div class="media-wrapper">
+        <img src="../assets/images/categories/skincare.webp" alt="Skincare" class="category-media">
+      </div>
+      <div class="category-overlay">
+        <h2>SKINCARE</h2>
+      </div>
+    </a>
 
+
+    <!-- BODY SPRAY -->
+    <a href="category.html?type=bodyspray" class="category-block">
+      <div class="media-wrapper">
+        <img src="../assets/images/categories/body.webp" alt="Body Spray" class="category-media">
+      </div>
+      <div class="category-overlay">
+        <h2>BODY SPRAY</h2>
+      </div>
+    </a>
+
+
+    <!-- CANDLES -->
+    <a href="category.html?type=candles" class="category-block">
+      <div class="media-wrapper">
+        <img src="../assets/images/categories/candles.webp" alt="Candles" class="category-media">
+      </div>
+      <div class="category-overlay">
+        <h2>CANDLES</h2>
+      </div>
+    </a>
+
+
+    <!-- ACCESSORIES -->
+    <a href="category.html?type=accessories" class="category-block">
+      <div class="media-wrapper">
+        <img src="../assets/images/categories/accessories.webp" alt="Accessories" class="category-media">
+      </div>
+      <div class="category-overlay">
+        <h2>ACCESSORIES</h2>
+      </div>
+    </a>
+
+  </section>
+
+
+  <!-- FOOTER -->
   <div id="footer"></div>
+
+  <!-- COMPONENT LOADER -->
+  <script src="../js/ui/components.js"></script>
 
 </body>
 
