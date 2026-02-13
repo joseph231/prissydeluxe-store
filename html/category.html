@@ -32,11 +32,6 @@
         <div class="loading" id="loading">Loading...</div>
     </section>
 
-
-    <!-- Footer -->
-    <div id="footer"></div>
-
-
     <script type="module">
         import { supabase } from "../supabase.js";
 
@@ -94,8 +89,8 @@
                 <img src="${product.image_url}" alt="${product.name}">
             </div>
             <div class="product-info">
-                <h3>${product.name}</h3>
-                <p>$${product.price}</p>
+                <h3>${product.title}</h3>
+                <p class="product-price" data-price="${product.price}">₦${product.price}</p>
             </div>
         `;
 
@@ -118,6 +113,28 @@
 
         loadProducts();
     </script>
+
+    <div class="currency-toggle">
+    <button data-currency="NGN" class="active">NGN</button>
+    <button data-currency="USD">USD</button>
+</div>
+
+
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+    fetch('../components/footer.html')
+        .then(res => res.text())
+        .then(data => {
+            document.getElementById("footer-placeholder").innerHTML = data;
+        });
+});
+</script>
+
+<script type="module" src="../js/products/category-loader.js"></script>
+<script type="module" src="../js/ui/infinitescroll.js"></script>
+
+<div id="footer-placeholder"></div>
+
 
 </body>
 
