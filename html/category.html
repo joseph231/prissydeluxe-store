@@ -2,174 +2,120 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Category | Prissy Deluxe</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Category | Prissyd</title>
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/category.css">
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/category.css" />
 
-    <!-- Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="../supabase.js"></script>
 </head>
 
 <body>
 
-    <!-- NAVBAR -->
+    <!-- Navbar -->
     <div id="navbar"></div>
 
-    <!-- ================= HERO HEADER ================= -->
-    <section class="category-hero" id="categoryHero">
+    <!-- HERO -->
+    <section class="category-hero">
+        <div class="hero-bg"></div>
         <div class="hero-overlay">
-            <h1 id="categoryTitle">Category</h1>
+            <h1 id="categoryTitle">CATEGORY</h1>
         </div>
     </section>
 
-    <!-- ================= MAIN SHOP LAYOUT ================= -->
-    <section class="shop-layout">
 
-        <!-- SIDEBAR -->
-        <aside class="sidebar">
-
-            <h3>Filter</h3>
-
-            <!-- Placeholder Sections -->
-            <div class="sidebar-section">
-                <h4>Price Range</h4>
-                <!-- Placeholder -->
-            </div>
-
-            <div class="sidebar-section">
-                <h4>Brand</h4>
-                <!-- Placeholder -->
-            </div>
-
-            <div class="sidebar-section">
-                <h4>Size</h4>
-                <!-- Placeholder -->
-            </div>
-
-            <!-- Currency Toggle -->
-            <div class="currency-toggle">
-                <label>
-                    <input type="radio" name="currency" value="USD" checked> USD
-                </label>
-                <label>
-                    <input type="radio" name="currency" value="NGN"> NGN
-                </label>
-            </div>
-
-        </aside>
-
-
-        <!-- PRODUCTS AREA -->
-        <div class="products-container">
-
-            <div id="productsGrid" class="products-grid">
-                <!-- Products injected here -->
-            </div>
-
-            <!-- Skeleton Loader -->
-            <div id="loading" class="loading">
-                Loading products...
-            </div>
-
-            <!-- Pagination fallback (hidden but exists structurally) -->
-            <div id="pagination" class="pagination"></div>
-
-        </div>
-
+    <!-- PRODUCTS GRID -->
+    <section class="category-products">
+        <div class="products-grid" id="productsGrid"></div>
+        <div class="loading" id="loading">Loading...</div>
     </section>
 
 
-    <!-- FOOTER -->
+    <!-- Footer -->
     <div id="footer"></div>
 
 
-    <!-- COMPONENT LOADER -->
-    <script src="../js/ui/components.js"></script>
-
-    <!-- ================= SUPABASE + INFINITE SCROLL ================= -->
-    <script>
-        const SUPABASE_URL = "YOUR_SUPABASE_URL";
-        const SUPABASE_KEY = "YOUR_SUPABASE_PUBLIC_ANON_KEY";
-
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    <script type="module">
+        import { supabase } from "../supabase.js";
 
         const urlParams = new URLSearchParams(window.location.search);
-        const categoryType = urlParams.get("type");
+        const category = urlParams.get("category");
 
-        const productsGrid = document.getElementById("productsGrid");
+        const grid = document.getElementById("productsGrid");
         const loading = document.getElementById("loading");
-        const categoryTitle = document.getElementById("categoryTitle");
-        const hero = document.getElementById("categoryHero");
+        const title = document.getElementById("categoryTitle");
 
-        let limit = 8;
-        let offset = 0;
+        title.textContent = category ? category.toUpperCase() : "CATEGORY";
+
+        let page = 0;
+        const limit = 8;
         let loadingProducts = false;
-        let allLoaded = false;
-
-        categoryTitle.innerText = categoryType ? categoryType.toUpperCase() : "Category";
-
-        // Change hero background based on category
-        if (categoryType === "perfumes") {
-            hero.style.backgroundImage = "url('../assets/images/backgrounds/bg-2.jpg')";
-        } else if (categoryType === "skincare") {
-            hero.style.backgroundImage = "url('../assets/images/backgrounds/bg-3.jpg')";
-        } else {
-            hero.style.backgroundImage = "url('../assets/images/backgrounds/bg-1.jpg')";
-        }
+        let finished = false;
 
 
         async function loadProducts() {
-            if (loadingProducts || allLoaded) return;
+            if (loadingProducts || finished) return;
 
             loadingProducts = true;
             loading.style.display = "block";
 
-            const { data, error } = await supabase
+            const from = page * limit;
+            const to = from + limit - 1;
+
+            let query = supabase
                 .from("products")
                 .select("*")
-                .eq("category", categoryType)
-                .range(offset, offset + limit - 1);
+                .range(from, to);
+
+            if (category) {
+                query = query.eq("category", category);
+            }
+
+            const { data, error } = await query;
 
             if (error) {
                 console.error(error);
-                loading.innerText = "Error loading products.";
                 return;
             }
 
             if (data.length < limit) {
-                allLoaded = true;
+                finished = true;
             }
 
             data.forEach(product => {
-                const productCard = document.createElement("div");
+                const productCard = document.createElement("a");
+                productCard.href = `product.html?id=${product.id}`;
                 productCard.classList.add("product-card");
 
                 productCard.innerHTML = `
-                    <img src="${product.image_url}" alt="${product.name}">
-                    <h4>${product.name}</h4>
-                    <p class="price">$${product.price}</p>
-                `;
+            <div class="product-image">
+                <img src="${product.image_url}" alt="${product.name}">
+            </div>
+            <div class="product-info">
+                <h3>${product.name}</h3>
+                <p>$${product.price}</p>
+            </div>
+        `;
 
-                productsGrid.appendChild(productCard);
+                grid.appendChild(productCard);
             });
 
-            offset += limit;
-            loading.style.display = "none";
+            page++;
             loadingProducts = false;
+            loading.style.display = "none";
         }
 
-        // Infinite Scroll Trigger
+
+        /* Infinite Scroll */
         window.addEventListener("scroll", () => {
             if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
                 loadProducts();
             }
         });
 
-        // Initial Load
+
         loadProducts();
     </script>
 
