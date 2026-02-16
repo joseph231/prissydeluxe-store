@@ -1,7 +1,7 @@
 import { supabase } from "../../supabase.js";
-import { convertPrice, getCurrentCurrency } from "../ui/pricetoggle.js";
 
 const grid = document.querySelector(".products-grid");
+
 const params = new URLSearchParams(window.location.search);
 const category = params.get("category");
 
@@ -10,10 +10,8 @@ const limit = 8;
 let loading = false;
 let finished = false;
 
-/* ===========================
-   LOAD PRODUCTS
-=========================== */
 export async function loadProducts() {
+
     if (loading || finished) return;
 
     loading = true;
@@ -40,19 +38,15 @@ export async function loadProducts() {
     }
 
     data.forEach(product => {
-        grid.appendChild(renderProductCard(product));
+        grid.appendChild(createCard(product));
     });
 
     page++;
     loading = false;
 }
 
-/* ===========================
-   PRODUCT CARD
-=========================== */
-function renderProductCard(product) {
-    const currency = getCurrentCurrency();
-    const converted = convertPrice(product.price_ngn);
+/* PRODUCT CARD */
+function createCard(product) {
 
     const card = document.createElement("div");
     card.classList.add("product-card");
@@ -64,9 +58,8 @@ function renderProductCard(product) {
             </div>
             <div class="product-info">
                 <h3>${product.name}</h3>
-                <p class="price">
-                    ${currency === "USD" ? "$" : "₦"}
-                    ${converted}
+                <p class="price" data-price="${product.price_ngn}">
+                    ₦${product.price_ngn.toLocaleString()}
                 </p>
             </div>
         </a>
@@ -74,3 +67,6 @@ function renderProductCard(product) {
 
     return card;
 }
+
+/* INITIAL LOAD */
+loadProducts();

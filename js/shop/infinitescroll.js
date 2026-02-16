@@ -1,7 +1,11 @@
-import { loadProducts } from "../shop/categoryloader.js";
+import { loadProducts } from "./categoryloader.js";
 
 window.addEventListener("scroll", () => {
-    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 300) {
+
+    const scrollPosition = window.innerHeight + window.scrollY;
+    const threshold = document.body.offsetHeight - 200;
+
+    if (scrollPosition >= threshold) {
         loadProducts();
     }
 });
