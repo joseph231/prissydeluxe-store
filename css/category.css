@@ -7,6 +7,20 @@ body {
     padding: 0;
 }
 
+.luxury-loader {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #000;
+    border-top: 1px solid transparent;
+    border-radius: 50%;
+    margin: 60px auto;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 
 /* =========================================
    HERO (MATCHES SHOP STRUCTURE)
@@ -177,4 +191,20 @@ body {
     .category-products {
         padding: 60px 6%;
     }
+}
+
+.product-card {
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+}
+
+.product-image img {
+    transition: transform 1s ease;
+}
+
+.product-card:hover img {
+    transform: scale(1.06);
 }

@@ -70,3 +70,6 @@ function createCard(product) {
 
 /* INITIAL LOAD */
 loadProducts();
+document.getElementById("loader").style.display = "block";
+document.getElementById("loader").style.display = "none";
+
