@@ -1,11 +1,20 @@
 import { supabase } from "../../supabase.js";
 
-const container = document.querySelector(".product-page");
+const titleEl = document.getElementById("product-title");
+const imageEl = document.getElementById("product-image");
+const brandEl = document.getElementById("product-brand");
+const priceEl = document.getElementById("product-price");
+const descEl = document.getElementById("product-description");
 
 const params = new URLSearchParams(window.location.search);
 const slug = params.get("slug");
 
 async function loadProduct() {
+
+    if (!slug) {
+        console.error("No slug found in URL");
+        return;
+    }
 
     const { data, error } = await supabase
         .from("products")
@@ -14,30 +23,27 @@ async function loadProduct() {
         .single();
 
     if (error) {
-        console.error(error);
+        console.error("Supabase error:", error);
         return;
     }
 
-    container.innerHTML = `
-        <div class="product-layout">
-            <div class="product-image">
-                <img src="${data.image_url}" alt="${data.name}">
-            </div>
+    if (!data) {
+        console.error("Product not found");
+        return;
+    }
 
-            <div class="product-info">
-                <h1>${data.name}</h1>
-                <p class="price" data-price="${data.price}">
-                    ₦${data.price.toLocaleString()}
-                </p>
-                <p class="description">${data.description || ""}</p>
+    // Populate UI
+    titleEl.textContent = data.name;
+    brandEl.textContent = data.brand || "";
+    descEl.textContent = data.description || "";
 
-                <div class="product-actions">
-                    <input type="number" value="1" min="1">
-                    <button class="add-to-cart">Add to Cart</button>
-                </div>
-            </div>
-        </div>
-    `;
+    imageEl.src = data.image_url || "../assets/images/fallback.webp";
+    imageEl.alt = data.name;
+
+    const price = data.price ?? 0;
+
+    priceEl.dataset.price = price;
+    priceEl.textContent = `₦${price.toLocaleString()}`;
 }
 
-loadProduct();
+document.addEventListener("DOMContentLoaded", loadProduct);

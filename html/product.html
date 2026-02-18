@@ -12,37 +12,60 @@
 
   <script src="../js/ui/components.js" defer></script>
   <script type="module" src="../js/products/product-page.js" defer></script>
+  <script type="module" src="../js/ui/pricetoggle.js" defer></script>
 </head>
 
 <body>
 
   <div id="navbar"></div>
 
-  <header class="page-hero" style="background-image:url('../assets/images/backgrounds/bg-4.jpg')">
-    <div class="hero-inner">
-      <img src="../assets/images/logo.png" class="page-hero-logo">
-      <h1 id="product-title"></h1>
-      <p>Discover the fragrance</p>
-    </div>
-  </header>
+  <!-- Hero -->
+  <section class="product-hero">
+    <h1 id="product-title"></h1>
+  </section>
 
-  <main class="container" style="padding:60px 0">
-    <div class="product-layout">
-      <img id="product-image" class="product-image">
-      <div class="product-info">
-        <p id="product-price" class="price"></p>
-        <p id="product-brand" class="meta"></p>
-        <p id="product-category" class="meta"></p>
-        <p id="product-description"></p>
-        <button id="addToCartBtn" class="btn-primary">Add to Cart</button>
+  <!-- Main Layout -->
+  <main class="product-container">
+
+    <div class="product-grid">
+
+      <!-- Left: Image -->
+      <div class="product-image-wrapper">
+        <img id="product-image" alt="Product Image">
       </div>
+
+      <!-- Right: Info -->
+      <div class="product-info">
+
+        <p id="product-brand" class="product-brand"></p>
+
+        <p id="product-price"
+           class="product-price"
+           data-price="">
+        </p>
+
+        <p id="product-description"
+           class="product-description">
+        </p>
+
+        <div class="product-actions">
+          <input type="number" id="quantity" value="1" min="1">
+          <button id="addToCartBtn" class="btn-primary">
+            Add to Cart
+          </button>
+        </div>
+
+      </div>
+
     </div>
-    const slug = location.pathname.split('/').pop();
+
   </main>
-<script type="module">
-import { initCurrencyToggle } from "../js/ui/pricetoggle.js";
-initCurrencyToggle();
-</script>
+
+  <!-- Currency Toggle -->
+  <div class="currency-toggle">
+      <button data-currency="NGN" class="active">NGN</button>
+      <button data-currency="USD">USD</button>
+  </div>
 
   <div id="footer"></div>
 

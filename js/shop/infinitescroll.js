@@ -1,4 +1,4 @@
-import { loadProducts } from "./categoryloader.js";
+import { loadProducts } from "./category-loader.js";
 
 let ticking = false;
 
@@ -11,7 +11,7 @@ function handleScroll() {
     requestAnimationFrame(() => {
 
         const scrollPosition = window.innerHeight + window.scrollY;
-        const threshold = document.body.offsetHeight - 300;
+        const threshold = document.documentElement.scrollHeight - 200;
 
         if (scrollPosition >= threshold) {
             loadProducts();
@@ -22,7 +22,9 @@ function handleScroll() {
 }
 
 /* INITIAL LOAD */
-loadProducts();
+document.addEventListener("DOMContentLoaded", () => {
+    loadProducts();
+});
 
-/* SCROLL */
+/* SCROLL LISTENER */
 window.addEventListener("scroll", handleScroll);

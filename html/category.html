@@ -1,150 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-<link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Category | Prissyd</title>
-    <button id="currency-toggle">USD</button>
+    <title>Category | PRISSYDELUXE</title>
 
+    <link rel="icon" href="/assets/images/favicon.ico">
 
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/category.css" />
 
-    <script type="module" src="../supabase.js"></script>
+    <script src="../js/ui/components.js" defer></script>
+    <script type="module" src="../js/shop/category-loader.js" defer></script>
+    <script type="module" src="../js/shop/infinitescroll.js" defer></script>
+    <script type="module" src="../js/ui/pricetoggle.js" defer></script>
 </head>
 
 <body>
 
-    <!-- Navbar -->
     <div id="navbar"></div>
 
     <!-- HERO -->
     <section class="category-hero">
-        <div class="hero-bg"></div>
         <div class="hero-overlay">
             <h1 id="categoryTitle">CATEGORY</h1>
         </div>
     </section>
 
+    <!-- Loader -->
     <div class="luxury-loader" id="loader"></div>
 
-    <!-- PRODUCTS GRID -->
+    <!-- Products -->
     <section class="category-products">
         <div class="products-grid" id="productsGrid"></div>
-        <div class="loading" id="loading">Loading...</div>
     </section>
 
-    <script type="module">
-        import { supabase } from "../supabase.js";
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const category = urlParams.get("category");
-
-        const grid = document.getElementById("productsGrid");
-        const loading = document.getElementById("loading");
-        const title = document.getElementById("categoryTitle");
-
-        title.textContent = category ? category.toUpperCase() : "CATEGORY";
-
-        let page = 0;
-        const limit = 8;
-        let loadingProducts = false;
-        let finished = false;
-
-
-        async function loadProducts() {
-            if (loadingProducts || finished) return;
-
-            loadingProducts = true;
-            loading.style.display = "block";
-
-            const from = page * limit;
-            const to = from + limit - 1;
-
-            let query = supabase
-                .from("products")
-                .select("*")
-                .range(from, to);
-
-            if (category) {
-                query = query.eq("category", category);
-            }
-
-            const { data, error } = await query;
-
-            if (error) {
-                console.error(error);
-                return;
-            }
-
-            if (data.length < limit) {
-                finished = true;
-            }
-
-            data.forEach(product => {
-                const productCard = document.createElement("a");
-                productCard.href = `product.html?id=${product.id}`;
-                productCard.classList.add("product-card");
-
-                productCard.innerHTML = `
-            <div class="product-image">
-                <img src="${product.image_url}" alt="${product.name}">
-            </div>
-            <div class="product-info">
-                <h3>${product.title}</h3>
-                <p class="product-price" data-price="${product.price}">₦${product.price}</p>
-            </div>
-        `;
-
-                grid.appendChild(productCard);
-            });
-
-            page++;
-            loadingProducts = false;
-            loading.style.display = "none";
-        }
-
-
-        /* Infinite Scroll */
-        window.addEventListener("scroll", () => {
-            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
-                loadProducts();
-            }
-        });
-
-
-        loadProducts();
-    </script>
-
+    <!-- Currency Toggle -->
     <div class="currency-toggle">
-    <button data-currency="NGN" class="active">NGN</button>
-    <button data-currency="USD">USD</button>
-</div>
+        <button data-currency="NGN" class="active">NGN</button>
+        <button data-currency="USD">USD</button>
+    </div>
 
-
-    <script>
-document.addEventListener("DOMContentLoaded", () => {
-    fetch('../components/footer.html')
-        .then(res => res.text())
-        .then(data => {
-            document.getElementById("footer-placeholder").innerHTML = data;
-        });
-});
-</script>
-
-<script type="module" src="../js/shop/category-loader.js"></script>
-<script type="module" src="../js/shop/infinitescroll.js"></script>
-<script type="module">
-import { initCurrencyToggle } from "../js/ui/pricetoggle.js";
-initCurrencyToggle();
-</script>
-
-
-<div id="footer-placeholder"></div>
-
+    <div id="footer"></div>
 
 </body>
-
 </html>
