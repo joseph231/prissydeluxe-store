@@ -1,11 +1,28 @@
 import { loadProducts } from "./categoryloader.js";
 
-window.addEventListener("scroll", () => {
+let ticking = false;
 
-    const scrollPosition = window.innerHeight + window.scrollY;
-    const threshold = document.body.offsetHeight - 200;
+function handleScroll() {
 
-    if (scrollPosition >= threshold) {
-        loadProducts();
-    }
-});
+    if (ticking) return;
+
+    ticking = true;
+
+    requestAnimationFrame(() => {
+
+        const scrollPosition = window.innerHeight + window.scrollY;
+        const threshold = document.body.offsetHeight - 300;
+
+        if (scrollPosition >= threshold) {
+            loadProducts();
+        }
+
+        ticking = false;
+    });
+}
+
+/* INITIAL LOAD */
+loadProducts();
+
+/* SCROLL */
+window.addEventListener("scroll", handleScroll);

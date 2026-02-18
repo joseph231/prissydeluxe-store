@@ -1,42 +1,43 @@
-import { supabase } from "../core/supabaseClient.js";
+import { supabase } from "../../supabase.js";
+
+const container = document.querySelector(".product-page");
 
 const params = new URLSearchParams(window.location.search);
-let slug = params.get("slug");
-
-if (!slug) {
-  const parts = window.location.pathname.split("/");
-  slug = parts[parts.length - 1];
-}
+const slug = params.get("slug");
 
 async function loadProduct() {
-  if (!slug) return;
 
-  const { data, error } = await supabase
-    .from("products")
-    .select("*")
-    .eq("slug", slug)
-    .single();
+    const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("slug", slug)
+        .single();
 
-  if (error || !data) {
-    console.error("Product load error:", error);
-    return;
-  }
+    if (error) {
+        console.error(error);
+        return;
+    }
 
-  document.getElementById("product-title").textContent = data.title;
-  document.getElementById("product-price").textContent =
-    `₦${Number(data.price).toLocaleString()}`;
+    container.innerHTML = `
+        <div class="product-layout">
+            <div class="product-image">
+                <img src="${data.image_url}" alt="${data.name}">
+            </div>
 
-  document.getElementById("product-description").textContent =
-    data.description || "";
+            <div class="product-info">
+                <h1>${data.name}</h1>
+                <p class="price" data-price="${data.price}">
+                    ₦${data.price.toLocaleString()}
+                </p>
+                <p class="description">${data.description || ""}</p>
 
-  const brandEl = document.getElementById("product-brand");
-  if (brandEl) brandEl.textContent = `Brand: ${data.brand || "—"}`;
-
-  const catEl = document.getElementById("product-category");
-  if (catEl) catEl.textContent = `Category: ${data.category || "—"}`;
-
-  const imgEl = document.getElementById("product-image");
-  if (imgEl) imgEl.src = data.image_url;
+                <div class="product-actions">
+                    <input type="number" value="1" min="1">
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    `;
 }
 
 loadProduct();

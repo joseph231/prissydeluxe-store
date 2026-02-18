@@ -45,8 +45,11 @@ export async function loadProducts() {
     loading = false;
 }
 
-/* PRODUCT CARD */
 function createCard(product) {
+
+    if (!product.price) {
+        console.warn("Missing price for:", product.name);
+    }
 
     const card = document.createElement("div");
     card.classList.add("product-card");
@@ -54,12 +57,12 @@ function createCard(product) {
     card.innerHTML = `
         <a href="product.html?id=${product.id}">
             <div class="product-image">
-                <img src="${product.image_url}" alt="${product.name}">
+                <img src="${product.image_url || '../assets/images/fallback.webp'}" alt="${product.name}">
             </div>
             <div class="product-info">
                 <h3>${product.name}</h3>
-                <p class="price" data-price="${product.price_ngn}">
-                    ₦${product.price_ngn.toLocaleString()}
+                <p class="price" data-price="${product.price}">
+                    ₦${product.price ? product.price.toLocaleString() : "0"}
                 </p>
             </div>
         </a>
@@ -67,9 +70,3 @@ function createCard(product) {
 
     return card;
 }
-
-/* INITIAL LOAD */
-loadProducts();
-document.getElementById("loader").style.display = "block";
-document.getElementById("loader").style.display = "none";
-

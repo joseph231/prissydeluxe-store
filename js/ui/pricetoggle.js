@@ -1,38 +1,46 @@
 let currentCurrency = "NGN";
-let exchangeRate = 1500; // fallback rate
+let exchangeRate = 1500;
 
-/* ===========================
-   FETCH LIVE RATE
-=========================== */
 async function fetchRate() {
     try {
         const res = await fetch("https://open.er-api.com/v6/latest/USD");
         const data = await res.json();
         exchangeRate = data.rates.NGN;
-    } catch (err) {
+    } catch {
         console.warn("Using fallback rate");
     }
 }
 
 fetchRate();
 
-/* ===========================
-   CONVERSION
-=========================== */
-export function convertPrice(priceNGN) {
-    if (currentCurrency === "NGN") {
-        return priceNGN.toLocaleString();
-    }
+function updatePrices() {
 
-    const usd = priceNGN / exchangeRate;
-    return usd.toFixed(2);
+    document.querySelectorAll(".price").forEach(el => {
+
+        const base = parseFloat(el.dataset.price);
+
+        if (!base) return;
+
+        if (currentCurrency === "NGN") {
+            el.textContent = `₦${base.toLocaleString()}`;
+        } else {
+            const usd = base / exchangeRate;
+            el.textContent = `$${usd.toFixed(2)}`;
+        }
+    });
 }
 
-export function toggleCurrency() {
-    currentCurrency = currentCurrency === "NGN" ? "USD" : "NGN";
-    location.reload();
-}
+export function initCurrencyToggle() {
 
-export function getCurrentCurrency() {
-    return currentCurrency;
+    const btn = document.getElementById("currency-toggle");
+    if (!btn) return;
+
+    btn.addEventListener("click", () => {
+
+        currentCurrency = currentCurrency === "NGN" ? "USD" : "NGN";
+
+        btn.textContent = currentCurrency;
+
+        updatePrices();
+    });
 }

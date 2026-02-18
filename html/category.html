@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+<link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Category | Prissyd</title>
+    <button id="currency-toggle">USD</button>
+
 
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/category.css" />
@@ -133,6 +136,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <script type="module" src="../js/shop/category-loader.js"></script>
 <script type="module" src="../js/shop/infinitescroll.js"></script>
+<script type="module">
+import { initCurrencyToggle } from "../js/ui/pricetoggle.js";
+initCurrencyToggle();
+</script>
+
 
 <div id="footer-placeholder"></div>
 
